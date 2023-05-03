@@ -31,7 +31,7 @@ class _splash_screenState extends State<splash_screen> {
               Text("Publeet",style: TextStyle(color: Colors.white, fontSize: 35),
               ),
               SizedBox(height: 10,),
-              Icon(Icons.join_inner)
+              Icon(Icons.join_inner,size: 25,)
             ],
           ),
       ),

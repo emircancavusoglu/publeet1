@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:publeet1/community_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -29,7 +31,25 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: true,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                if(_emailController.text.isNotEmpty&&_passwordController.text.isNotEmpty){
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const CommunityScreen(),));
+                }
+                else{
+                  showDialog(context: context, builder: (context) {
+                    return AlertDialog(
+                      title: const Text("Warning !"),
+                      content: const Text("Username or password cannot be left blank"),
+                      actions: [
+                        TextButton(onPressed: (){
+                          Navigator.of(context).pop();
+                        }, child: const Text("Ok"))
+                      ],
+                    );
+                  },
+                  );
+                }
+              },
               child: const Text('Log In'),
             ),
           ],
