@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:publeet1/community_screen.dart';
+import 'package:publeet1/selection_screen.dart';
 
+import 'main.dart';
+import 'package:flutter/material.dart';
+import 'communityWorld.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -33,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ElevatedButton(
               onPressed: () {
                 if(_emailController.text.isNotEmpty&&_passwordController.text.isNotEmpty){
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const CommunityScreen(),));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>  const SelectionScreen(),));
                 }
                 else{
                   showDialog(context: context, builder: (context) {
@@ -58,3 +59,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
