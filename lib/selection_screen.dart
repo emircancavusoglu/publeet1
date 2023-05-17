@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:publeet1/find_community.dart';
-import 'main.dart';
+import 'login_screen.dart';
 import 'communityWorld.dart';
 import 'add_community.dart';
 
 class SelectionScreen extends StatelessWidget {
-  const SelectionScreen({Key? key}) : super(key: key);
-
+  final String userName;
+  const SelectionScreen({Key? key, required this.userName}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Hoşgeldin $userName"),
+      ),
       backgroundColor: Colors.indigoAccent,
       body: Center(
         child: Column(
@@ -40,7 +43,7 @@ class SelectionScreen extends StatelessWidget {
                 const Icon(Icons.find_in_page),
                 TextButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const FindCommunity()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>  FindCommunity()));
                   },
                   child: const Text("Topluluk Bul",style: TextStyle(fontSize: 24, color: Colors.black),),
                 ),
@@ -53,7 +56,7 @@ class SelectionScreen extends StatelessWidget {
                 const Icon(Icons.public),
                 TextButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const CommunityScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>  const CommunityScreen()));
                   },
                   child: const Text("Dünyadaki Topluluklar",style: TextStyle(fontSize: 24, color: Colors.black),),
                 ),

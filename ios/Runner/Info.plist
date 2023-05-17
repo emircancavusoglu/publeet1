@@ -14,6 +14,10 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>publeet1</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+    <string>Uygulamanın konumunu kullanmasına izin verin.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Uygulamanın konumunu kullanmasına izin verin.</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

@@ -1,10 +1,4 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'locations.dart';
-
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
 
 LatLng _$LatLngFromJson(Map<String, dynamic> json) => LatLng(
       lat: (json['lat'] as num).toDouble(),

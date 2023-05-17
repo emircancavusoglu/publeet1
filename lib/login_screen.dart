@@ -1,8 +1,6 @@
 import 'package:publeet1/selection_screen.dart';
-
-import 'main.dart';
 import 'package:flutter/material.dart';
-import 'communityWorld.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -11,8 +9,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -22,25 +20,52 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(hintText: 'Email'),
+            const Text(
+              "Publeet",
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.indigoAccent
+              ),
             ),
+            const SizedBox(height: 24),
             TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(hintText: 'Password'),
+              controller: userNameController,
+              decoration: InputDecoration(
+                hintText: 'Kullanıcı adı',
+                filled: true,
+                fillColor: Colors.grey[200],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: passwordController,
+              decoration: InputDecoration(
+                hintText: 'Şifre',
+                filled: true,
+                fillColor: Colors.grey[200],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
               obscureText: true,
             ),
+            const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                if(_emailController.text.isNotEmpty&&_passwordController.text.isNotEmpty){
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>  const SelectionScreen(),));
+                if(userNameController.text.isNotEmpty&&passwordController.text.isNotEmpty){
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>  SelectionScreen(userName: userNameController.text),));
                 }
                 else{
                   showDialog(context: context, builder: (context) {
                     return AlertDialog(
-                      title: const Text("Warning !"),
-                      content: const Text("Username or password cannot be left blank"),
+                      title: const Text("Uyarı !"),
+                      content: const Text("Kullanıcı adı veya şifre boş geçilemez"),
                       actions: [
                         TextButton(onPressed: (){
                           Navigator.of(context).pop();
@@ -51,7 +76,45 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 }
               },
-              child: const Text('Log In'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 48),
+                backgroundColor: Colors.deepPurple,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+              child: const Text('Giriş Yap'),
+            ),
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: () {},
+              child: const Text(
+                "Şifreni mi unuttun ?",
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Hesabın yok mu ?",
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    "Kayıt ol.",
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -59,4 +122,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
