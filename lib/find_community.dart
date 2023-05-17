@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'community_list.dart';
 
 class FindCommunity extends StatefulWidget {
   const FindCommunity({Key? key}) : super(key: key);
@@ -64,12 +65,18 @@ class _FindCommunityState extends State<FindCommunity> {
         _currentAddress =
         '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
       });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CommunityList(address: _currentAddress),
+        ),
+      );
     }).catchError((e) {
       debugPrint(e);
     });
   }
 
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -80,7 +87,7 @@ class _FindCommunityState extends State<FindCommunity> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Adres : ${_currentAddress ?? ""}'),
+              Center(child: Text('Adres : ${_currentAddress ?? ""}',style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 22),)),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _getCurrentPosition,
