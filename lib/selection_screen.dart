@@ -23,17 +23,21 @@ class SelectionScreen extends StatelessWidget {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 16, top: 16, right: 16),
-                      child: const Text(
-                        "Kullanıcı Bilgisi",
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
+                  Container(
+                    margin: const EdgeInsets.only(left: 16, top: 16, right: 16),
+                    child: Row(
+                      children: const [
+                        Text(
+                          "Kullanıcı Bilgisi",
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                          ),
                         ),
-                      ),
+                        SizedBox(width: 8),
+                        Icon(Icons.person),
+                      ],
                     ),
                   ),
                 ],
@@ -41,7 +45,7 @@ class SelectionScreen extends StatelessWidget {
               const SizedBox(height: 50),
               Column(
                 children: [
-                  SizedBox(width: double.infinity),
+                  const SizedBox(width: double.infinity),
                   Text(
                     "Kullanıcı Adı: $userName",
                     style: const TextStyle(
@@ -79,7 +83,7 @@ class SelectionScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.add, color: Colors.black),
+                  const Icon(Icons.group_add_outlined, color: Colors.black),
                   const SizedBox(width: 8),
                   TextButton(
                     onPressed: () {
@@ -92,16 +96,15 @@ class SelectionScreen extends StatelessWidget {
                     },
                     child: const Text(
                       "Topluluk Ekle",
-                      style: TextStyle(fontSize: 24, color: Colors.blue),
+                      style: TextStyle(fontSize: 24, color: Colors.deepPurple),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.find_in_page),
+                  const Icon(Icons.find_in_page_outlined),
                   const SizedBox(width: 8),
                   TextButton(
                     onPressed: () {
@@ -114,12 +117,31 @@ class SelectionScreen extends StatelessWidget {
                     },
                     child: const Text(
                       "Topluluk Bul",
-                      style: TextStyle(fontSize: 24, color: Colors.blue),
+                      style: TextStyle(fontSize: 24, color: Colors.deepPurple),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.group),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FindCommunity(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Topluluklarım",
+                      style: TextStyle(fontSize: 24, color: Colors.deepPurple),
+                    ),
+                  ),
+                ],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -136,7 +158,7 @@ class SelectionScreen extends StatelessWidget {
                     },
                     child: const Text(
                       "Dünyadaki Topluluklar",
-                      style: TextStyle(fontSize: 24, color: Colors.blue),
+                      style: TextStyle(fontSize: 24, color: Colors.deepPurple),
                     ),
                   ),
                 ],

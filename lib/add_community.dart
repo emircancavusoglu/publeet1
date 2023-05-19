@@ -9,13 +9,13 @@ class AddCommunityForm extends StatefulWidget {
 
 class _AddCommunityFormState extends State<AddCommunityForm> {
   final _formKey = GlobalKey<FormState>();
-  final _adSoyadController = TextEditingController();
+  final _toplulukAdController = TextEditingController();
   final _emailController = TextEditingController();
   final _telefonController = TextEditingController();
 
   @override
   void dispose() {
-    _adSoyadController.dispose();
+    _toplulukAdController.dispose();
     _emailController.dispose();
     _telefonController.dispose();
     super.dispose();
@@ -25,69 +25,87 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.deepPurple,
         title: const Text("Topluluk Ekle"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                controller: _adSoyadController,
-                decoration: const InputDecoration(
-                  labelText: "Ad Soyad",
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 32),
+                const Align(
+                  alignment: Alignment.topCenter,
+                  child: Icon(
+                    Icons.sentiment_satisfied_alt,
+                    size: 96,
+                    color: Colors.deepPurple,
+                  ),
                 ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Lütfen adınızı ve soyadınızı girin";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: "E-posta",
+                const SizedBox(height: 12,),
+                TextFormField(
+                  controller: _toplulukAdController,
+                  decoration: const InputDecoration(
+                    labelText: "Topluluk İsmi",
+                    border: UnderlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Lütfen topluluk ismini giriniz!";
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Lütfen e-posta adresinizi girin";
-                  }
-                  if (!value.contains("@")) {
-                    return "Geçersiz e-posta adresi";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _telefonController,
-                decoration: const InputDecoration(
-                  labelText: "Telefon",
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: "E-posta",
+                    border: UnderlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Lütfen e-posta adresinizi girin";
+                    }
+                    if (!value.contains("@")) {
+                      return "Geçersiz e-posta adresi";
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Lütfen telefon numaranızı girin";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Form geçerliyse burada kaydetme işlemini yapabilirsiniz.
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Bilgiler kaydedildi")),
-                    );
-                  }
-                },
-                child: const Text("Kaydet"),
-              ),
-            ],
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _telefonController,
+                  decoration: const InputDecoration(
+                    labelText: "Telefon",
+                    border: UnderlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Lütfen telefon numaranızı girin";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.deepPurple)),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      // Form geçerliyse burada kaydetme işlemini yapabilirsiniz.
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Bilgiler kaydedildi")),
+                      );
+                    }
+                  },
+                  child: const Text("Kaydet"),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),
