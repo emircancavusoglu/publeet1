@@ -1,5 +1,6 @@
 import 'package:publeet1/selection_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:publeet1/sign_register_form.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -106,7 +107,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const UserRegistrationScreen(),));
+                  },
                   child: const Text(
                     "Kayıt ol.",
                     style: TextStyle(

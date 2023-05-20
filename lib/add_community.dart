@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:publeet1/sign_location.dart';
 class AddCommunityForm extends StatefulWidget {
   const AddCommunityForm({Key? key}) : super(key: key);
 
@@ -9,13 +9,13 @@ class AddCommunityForm extends StatefulWidget {
 
 class _AddCommunityFormState extends State<AddCommunityForm> {
   final _formKey = GlobalKey<FormState>();
-  final _toplulukAdController = TextEditingController();
+  final toplulukAdController = TextEditingController();
   final _emailController = TextEditingController();
   final _telefonController = TextEditingController();
 
   @override
   void dispose() {
-    _toplulukAdController.dispose();
+    toplulukAdController.dispose();
     _emailController.dispose();
     _telefonController.dispose();
     super.dispose();
@@ -47,7 +47,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                 ),
                 const SizedBox(height: 12,),
                 TextFormField(
-                  controller: _toplulukAdController,
+                  controller: toplulukAdController,
                   decoration: const InputDecoration(
                     labelText: "Topluluk İsmi",
                     border: UnderlineInputBorder(),
@@ -90,12 +90,14 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                     return null;
                   },
                 ),
+                IconButton(onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const KonumKayit(),));
+                }, icon: const Icon(Icons.add_location_alt)),
                 const SizedBox(height: 32),
                 ElevatedButton(
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.deepPurple)),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Form geçerliyse burada kaydetme işlemini yapabilirsiniz.
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Bilgiler kaydedildi")),
                       );

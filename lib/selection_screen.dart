@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:publeet1/find_community.dart';
-import 'login_screen.dart';
+import 'my_communities.dart';
 import 'communityWorld.dart';
 import 'add_community.dart';
 
@@ -16,36 +16,33 @@ class SelectionScreen extends StatelessWidget {
         title: Text("Hoşgeldin $userName"),
       ),
       body: SingleChildScrollView(
-        child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 16, top: 16, right: 16),
-                    child: Row(
-                      children: const [
-                        Text(
-                          "Kullanıcı Bilgisi",
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
-                          ),
+                  Row(
+                    children: const [
+                      Text(
+                        "Kullanıcı Bilgisi",
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
                         ),
-                        SizedBox(width: 8),
-                        Icon(Icons.person),
-                      ],
-                    ),
+                      ),
+                      SizedBox(width: 8),
+                      Icon(Icons.person),
+                    ],
                   ),
                 ],
               ),
               const SizedBox(height: 50),
               Column(
                 children: [
-                  const SizedBox(width: double.infinity),
                   Text(
                     "Kullanıcı Adı: $userName",
                     style: const TextStyle(
@@ -56,9 +53,9 @@ class SelectionScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   const Padding(
-                    padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
-                      "Kayıtlı Olduğun Topluluklar: ",
+                      "Kayıtlı Olduğun Topluluklar:",
                       style: TextStyle(
                         color: Colors.deepPurple,
                         fontSize: 24,
@@ -104,7 +101,7 @@ class SelectionScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.find_in_page_outlined),
+                  const Icon(Icons.search),
                   const SizedBox(width: 8),
                   TextButton(
                     onPressed: () {
@@ -131,7 +128,7 @@ class SelectionScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => FindCommunity(),
+                          builder: (context) => const MyCommunities(),
                         ),
                       );
                     },
