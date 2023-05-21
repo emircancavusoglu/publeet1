@@ -25,7 +25,7 @@ class _MyCommunitiesState extends State<MyCommunities> {
           ],
         ),
       ),
-      body: Text(""),
+      body: const Text(""),
     );
   }
 }

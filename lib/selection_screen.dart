@@ -22,10 +22,10 @@ class SelectionScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 16),
-              Row(
+              const Row(
                 children: [
                   Row(
-                    children: const [
+                    children: [
                       Text(
                         "Kullanıcı Bilgisi",
                         style: TextStyle(
