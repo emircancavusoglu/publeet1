@@ -9,18 +9,19 @@ class MyCommunities extends StatefulWidget {
   State<MyCommunities> createState() => _MyCommunitiesState();
 }
 class _MyCommunitiesState extends State<MyCommunities> {
-  List<String> topluluklar = []; // Topluluk isimlerini içeren bir liste
+  List<String> topluluklar = [];
 
   @override
   void initState() {
     super.initState();
-    topluluklar = widget.toplulukIsmi.split(','); // Virgülle ayrılmış isimleri listeye ayırma
+    topluluklar = widget.toplulukIsmi.split(',');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.deepPurple,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

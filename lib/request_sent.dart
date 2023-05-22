@@ -10,7 +10,7 @@ class RequestSent extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            SizedBox(height: 300,),
+            const SizedBox(height: 300,),
             const Text("İstek Gönderildi!",style: TextStyle(
               fontWeight: FontWeight.normal,fontSize: 28,color: Colors.green
             ),

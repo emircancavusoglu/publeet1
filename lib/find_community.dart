@@ -22,7 +22,7 @@ class _FindCommunityState extends State<FindCommunity> {
     if (!serviceEnabled) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
-              'Location services are disabled. Please enable the services')));
+              'Konum değerleri aktif değil. Lütfen aktif ediniz.')));
       return false;
     }
     permission = await Geolocator.checkPermission();
@@ -30,14 +30,14 @@ class _FindCommunityState extends State<FindCommunity> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')));
+            const SnackBar(content: Text('Konum izinleri reddedildi')));
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.')));
+              'Konum izinleri kalıcı olarak reddedildi, izin isteyemiyoruz.')));
       return false;
     }
     return true;

@@ -21,8 +21,8 @@ class CommunityList extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context)=> const RequestSent()));
             },
             child: ListTile(
-              title: Row(
-                children: const [
+              title: const Row(
+                children: [
                   Text("Satranç Topluluğu"),
                   SizedBox(width: 8,),
                   Text(" 5 km uzaklıkta",style: TextStyle(color: Colors.deepPurple,fontWeight: FontWeight.bold),),
@@ -38,8 +38,8 @@ class CommunityList extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context)=> const RequestSent()));
             },
             child: ListTile(
-              title: Row(
-                children: const [
+              title: const Row(
+                children: [
                   Text(" Ybs Topluluğu"),
                   SizedBox(width: 8,),
                   Text(" 8 km uzaklıkta",style: TextStyle(color: Colors.deepPurple,fontWeight: FontWeight.bold),),
@@ -55,8 +55,8 @@ class CommunityList extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context)=> const RequestSent()));
             },
             child: ListTile(
-              title: Row(
-                children: const [
+              title: const Row(
+                children: [
                   Text("Gezi Topluluğu"),
                   SizedBox(width: 8,),
                   Text(" 15 km uzaklıkta",style: TextStyle(color: Colors.deepPurple,fontWeight: FontWeight.bold),),
