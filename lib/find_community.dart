@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'community_list.dart';
-import 'package:mockito/mockito.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 class FindCommunity extends StatefulWidget {
   const FindCommunity({Key? key}) : super(key: key);

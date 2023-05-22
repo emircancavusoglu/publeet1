@@ -4,9 +4,9 @@ import 'package:publeet1/login_screen.dart';
 import 'package:publeet1/selection_screen.dart';
 
 void main() {
-      testWidgets('Login button should navigate to SelectionScreen when username and password are provided', (WidgetTester tester) async {
+      testWidgets("Kullanıcı adı ve parola sağlandığında oturum açma butonu SelectionScreen'e gitmelidir.", (WidgetTester tester) async {
             await tester.pumpWidget(
-                  MaterialApp(
+                  const MaterialApp(
                         home: LoginScreen(),
                   ),
             );
@@ -23,7 +23,7 @@ void main() {
             expect(find.byType(SelectionScreen), findsOneWidget);
       });
 
-      testWidgets('Login button should show an alert dialog when username or password is empty', (WidgetTester tester) async {
+      testWidgets('Oturum açma butonu, kullanıcı adı veya parola boş olduğunda bir uyarı göstermelidir', (WidgetTester tester) async {
             await tester.pumpWidget(
                   const MaterialApp(
                         home: LoginScreen(),
@@ -37,6 +37,4 @@ void main() {
 
             expect(find.byType(AlertDialog), findsOneWidget);
       });
-
-      // Add more test cases for other scenarios if needed
 }

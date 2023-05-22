@@ -6,7 +6,8 @@ import 'add_community.dart';
 
 class SelectionScreen extends StatelessWidget {
   final String userName;
-  const SelectionScreen({Key? key, required this.userName}) : super(key: key);
+  final TextEditingController toplulukAdController = TextEditingController();
+  SelectionScreen({Key? key, required this.userName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +129,7 @@ class SelectionScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const MyCommunities(),
+                          builder: (context) => const MyCommunities(toplulukIsmi:"" ),
                         ),
                       );
                     },
