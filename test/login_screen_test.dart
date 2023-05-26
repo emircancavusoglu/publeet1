@@ -18,7 +18,7 @@ void main() {
             await tester.enterText(userNameField, 'testuser');
             await tester.enterText(passwordField, 'testpassword');
             await tester.tap(loginButton);
-            await tester.pumpAndSettle();
+            await tester.pumpAndSettle(); //ekran geçişini bekler
 
             expect(find.byType(SelectionScreen), findsOneWidget);
       });

@@ -127,6 +127,17 @@ class _KonumKayitState extends State<KonumKayit> {
                     : const Text('Adres bilgisi bulunamadı.'),
                 actions: [
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        _showDialog = false;
+                      });
+                    },
+                    child: const Text('Reddet'),
+                  ),
+
+                  ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
                       setState(() {
@@ -135,6 +146,7 @@ class _KonumKayitState extends State<KonumKayit> {
                     },
                     child: const Text('Onaylıyorum'),
                   ),
+
                 ],
               ),
           ],
