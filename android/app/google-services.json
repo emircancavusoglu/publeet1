@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "645636668245",
+    "project_id": "publeet-a9052",
+    "storage_bucket": "publeet-a9052.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645636668245:android:8a9772792f3e2cde628ddc",
+        "android_client_info": {
+          "package_name": "com.example.publeet1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDCDsYl76zZstnD-bLP1VxbjCqjjnz-0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
