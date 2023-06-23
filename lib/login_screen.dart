@@ -1,6 +1,29 @@
 import 'package:publeet1/selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:publeet1/sign_register_form.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:publeet1/splash_screen.dart';
+import 'services/auth_services.dart';
+
+
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Publeet',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: const splash_screen(),
+    );
+  }
+}
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -59,23 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                if(userNameController.text.isNotEmpty&&passwordController.text.isNotEmpty){
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>  SelectionScreen(userName: userNameController.text),));
-                }
-                else{
-                  showDialog(context: context, builder: (context) {
-                    return AlertDialog(
-                      title: const Text("Uyarı !"),
-                      content: const Text("Kullanıcı adı veya şifre boş geçilemez"),
-                      actions: [
-                        TextButton(onPressed: (){
-                          Navigator.of(context).pop();
-                        }, child: const Text("Ok"))
-                      ],
-                    );
-                  },
-                  );
-                }
+                AuthServices().registerUser(name: userNameController.text, password: passwordController.text);
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),

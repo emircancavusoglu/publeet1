@@ -21,12 +21,12 @@ class _splash_screenState extends State<splash_screen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.deepPurple,
       body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Text("Publeet",style: TextStyle(color: Colors.white, fontSize: 35),
               ),
               SizedBox(height: 10,),

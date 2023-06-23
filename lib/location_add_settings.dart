@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'main.dart';
 
 typedef PositionCallBack = Function (Position position);
 class Gps{
