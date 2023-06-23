@@ -1,8 +1,5 @@
-import 'package:publeet1/selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:publeet1/sign_register_form.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:publeet1/splash_screen.dart';
 import 'services/auth_services.dart';
 
@@ -56,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextField(
               controller: userNameController,
               decoration: InputDecoration(
-                hintText: 'Kullanıcı adı',
+                hintText: 'E-Posta',
                 filled: true,
                 fillColor: Colors.grey[200],
                 border: OutlineInputBorder(
@@ -82,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                AuthServices().registerUser(name: userNameController.text, password: passwordController.text);
+                AuthServices().signUp(email: userNameController.text, password: passwordController.text);
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
