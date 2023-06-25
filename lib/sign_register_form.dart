@@ -79,7 +79,15 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
           child: ListView(
             children: [
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Ad'),
+                decoration: InputDecoration(
+                    hintText: 'Ad',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none
+                    ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Lütfen adınızı giriniz.';
@@ -87,8 +95,17 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                   return null;
                 },
               ),
+              const SizedBox(height: 12.0,),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Soyad'),
+                decoration: InputDecoration(
+                  hintText: 'Soyad',
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide.none
+                  )
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Lütfen soyadınızı giriniz.';
@@ -96,18 +113,17 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                   return null;
                 },
               ),
+              const SizedBox(height: 12,),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Telefon'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Lütfen telefon numaranızı giriniz.';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.phone,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'E-posta'),
+                decoration:  InputDecoration(
+                    hintText: 'E-posta',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none
+                    )
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Lütfen geçerli bir e-posta adresi giriniz.';
@@ -116,9 +132,18 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                 },
                 keyboardType: TextInputType.emailAddress,
               ),
+              const SizedBox(height: 12,),
               TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Şifre'),
+                decoration: InputDecoration(
+                    hintText: 'Şifre',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none
+                    )
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Lütfen şifrenizi giriniz.';
@@ -127,9 +152,18 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                 },
                 obscureText: true,
               ),
+              const SizedBox(height: 12,),
               TextFormField(
                 controller: _confirmPasswordController,
-                decoration: const InputDecoration(labelText: 'Şifre Tekrar'),
+                decoration: InputDecoration(
+                    hintText: 'Şifre Tekrar',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none
+                    )
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Lütfen şifrenizi tekrar giriniz.';
