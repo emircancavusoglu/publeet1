@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:publeet1/sign_register_form.dart';
 import 'package:publeet1/splash_screen.dart';
-import 'services/auth_services.dart';
 
 
 
@@ -78,9 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 12),
             ElevatedButton(
-              onPressed: () {
-                AuthServices().signUp(email: userNameController.text, password: passwordController.text);
-              },
+              onPressed: () {},
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
                 backgroundColor: Colors.deepPurple,

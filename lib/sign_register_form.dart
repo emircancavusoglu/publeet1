@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:publeet1/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:publeet1/services/auth_services.dart';
 
 class UserRegistrationScreen extends StatefulWidget {
   const UserRegistrationScreen({Key? key}) : super(key: key);
@@ -9,13 +11,15 @@ class UserRegistrationScreen extends StatefulWidget {
 }
 
 class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      if (_passwordController.text != _confirmPasswordController.text) {
+    AuthServices().signUp(email: emailController.text, password: passwordController.text);
+    if (formKey.currentState!.validate()) {
+      if (passwordController.text != confirmPasswordController.text) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -59,13 +63,6 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
   }
 
   @override
-  void dispose() {
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -75,7 +72,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: ListView(
             children: [
               TextFormField(
@@ -115,6 +112,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
               ),
               const SizedBox(height: 12,),
               TextFormField(
+                controller: emailController,
                 decoration:  InputDecoration(
                     hintText: 'E-posta',
                     filled: true,
@@ -134,7 +132,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
               ),
               const SizedBox(height: 12,),
               TextFormField(
-                controller: _passwordController,
+                controller: passwordController,
                 decoration: InputDecoration(
                     hintText: 'Şifre',
                     filled: true,
@@ -154,7 +152,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
               ),
               const SizedBox(height: 12,),
               TextFormField(
-                controller: _confirmPasswordController,
+                controller: confirmPasswordController,
                 decoration: InputDecoration(
                     hintText: 'Şifre Tekrar',
                     filled: true,
@@ -168,7 +166,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Lütfen şifrenizi tekrar giriniz.';
                   }
-                  if (value != _passwordController.text) {
+                  if (value != passwordController.text) {
                     return 'Girdiğiniz şifreler eşleşmiyor.';
                   }
                   return null;
@@ -189,10 +187,4 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: UserRegistrationScreen(),
-  ));
 }
