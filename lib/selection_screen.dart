@@ -3,18 +3,18 @@ import 'package:publeet1/find_community.dart';
 import 'my_communities.dart';
 import 'communityWorld.dart';
 import 'add_community.dart';
+import 'login_screen.dart';
 
 class SelectionScreen extends StatelessWidget {
-  final String userName;
   final TextEditingController toplulukAdController = TextEditingController();
-  SelectionScreen({Key? key, required this.userName}) : super(key: key);
+
+  SelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
-        title: Text("Hoşgeldin $userName"),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -42,18 +42,10 @@ class SelectionScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 50),
-              Column(
+              const Column(
                 children: [
-                  Text(
-                    "Kullanıcı Adı: $userName",
-                    style: const TextStyle(
-                      color: Colors.deepPurple,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Padding(
+                  SizedBox(height: 16),
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       "Kayıtlı Olduğun Topluluklar:",
@@ -66,7 +58,7 @@ class SelectionScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const Text(
+                  Text(
                     "Satranç Topluluğu",
                     style: TextStyle(
                       color: Colors.brown,
@@ -109,7 +101,7 @@ class SelectionScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => FindCommunity(),
+                          builder: (context) => const FindCommunity(),
                         ),
                       );
                     },

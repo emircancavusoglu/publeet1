@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:publeet1/selection_screen.dart';
+
 
 class AuthServices{
   final usersCollection = FirebaseFirestore.instance.collection("users");
@@ -13,12 +17,23 @@ class AuthServices{
         _registerUser(email: email, password: password);
     }
     }on FirebaseAuthException catch(e){
-      Fluttertoast.showToast(msg: e.message!);
+      Fluttertoast.showToast(msg: e.message!,toastLength: Toast.LENGTH_LONG);
+    }
+}
+  Future<void> signIn(BuildContext context,{required String email, required String password}) async{
+    final navigator = Navigator.of(context);
+    try{
+      final UserCredential userCredential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      if(userCredential.user != null){
+        navigator.push(MaterialPageRoute(builder: (context) => SelectionScreen(),));
+      }
+    } on FirebaseAuthException catch(e){
+      Fluttertoast.showToast(msg: e.message!,toastLength: Toast.LENGTH_LONG);
     }
 }
   Future<void> _registerUser({required String email, required String password})async{
   await usersCollection.doc().set({
-    "name": email,
+    "email": email,
     "password": password
   });
   }

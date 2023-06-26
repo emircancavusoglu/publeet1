@@ -176,7 +176,11 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
               const SizedBox(height: 16),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 48),
                   backgroundColor: Colors.deepPurple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  )
                 ),
                 onPressed: _submitForm,
                 child: const Text('Kayıt Ol'),

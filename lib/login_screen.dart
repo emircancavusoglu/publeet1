@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:publeet1/services/auth_services.dart';
 import 'package:publeet1/sign_register_form.dart';
 import 'package:publeet1/splash_screen.dart';
-
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'selection_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -77,7 +78,10 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 12),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                AuthServices().signIn(context,email: userNameController.text, password: passwordController.text);
+
+                },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
                 backgroundColor: Colors.deepPurple,
