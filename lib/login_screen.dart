@@ -89,8 +89,9 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                navigateToRegistrationScreen();
                 AuthServices().signIn(context,email: userNameController.text, password: passwordController.text);
+                userNameController.clear();
+                passwordController.clear();
                 },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),

@@ -7,14 +7,13 @@ import 'add_community.dart';
 class SelectionScreen extends StatelessWidget {
   final TextEditingController toplulukAdController = TextEditingController();
 
+
   SelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
-      ),
+      appBar: AppBar(backgroundColor: Colors.deepPurple),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -25,7 +24,6 @@ class SelectionScreen extends StatelessWidget {
               const Row(
                 children: [
                   Row(
-
                     children: [
                       Text(
                         "Kullanıcı Bilgisi",
