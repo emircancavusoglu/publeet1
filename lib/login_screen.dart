@@ -7,7 +7,6 @@ import 'selection_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,6 +31,17 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  Future<void> navigateToRegistrationScreen() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SelectionScreen()),
+    ).then((value) {
+      // Ekran değiştikten sonra burası çalışır
+      userNameController.clear();
+      passwordController.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
+                navigateToRegistrationScreen();
                 AuthServices().signIn(context,email: userNameController.text, password: passwordController.text);
-
                 },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),

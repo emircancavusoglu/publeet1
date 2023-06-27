@@ -3,7 +3,6 @@ import 'package:publeet1/find_community.dart';
 import 'my_communities.dart';
 import 'communityWorld.dart';
 import 'add_community.dart';
-import 'login_screen.dart';
 
 class SelectionScreen extends StatelessWidget {
   final TextEditingController toplulukAdController = TextEditingController();
@@ -26,6 +25,7 @@ class SelectionScreen extends StatelessWidget {
               const Row(
                 children: [
                   Row(
+
                     children: [
                       Text(
                         "Kullanıcı Bilgisi",
