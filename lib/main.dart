@@ -4,7 +4,7 @@ import 'package:publeet1/splash_screen.dart';
 import 'initialize/app_initialize.dart';
 
 
-void main() async {
+Future<void> main() async {
   await ApplicationInitialize.init();
   runApp(const MyApp());
 }
