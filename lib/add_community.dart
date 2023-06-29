@@ -13,16 +13,15 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
   final _formKey = GlobalKey<FormState>();
   final toplulukAdController = TextEditingController();
   final _emailController = TextEditingController();
-  final _telefonController = TextEditingController();
+  final _description = TextEditingController();
 
-  String _toplulukIsmi = "";
   bool _isLoading = false;
 
   @override
   void dispose() {
     toplulukAdController.dispose();
     _emailController.dispose();
-    _telefonController.dispose();
+    _description.dispose();
     super.dispose();
   }
 
@@ -66,11 +65,6 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                         }
                         return null;
                       },
-                      onChanged: (value) {
-                        setState(() {
-                          _toplulukIsmi = value;
-                        });
-                      },
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
@@ -91,14 +85,14 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
-                      controller: _telefonController,
+                      controller: _description,
                       decoration: const InputDecoration(
-                        labelText: "Telefon",
+                        labelText: "Açıklama",
                         border: UnderlineInputBorder(),
                       ),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Lütfen telefon numaranızı girin";
+                          return "Lütfen topluluğunuzu tanıtan açıklamayı girin";
                         }
                         return null;
                       },
@@ -124,12 +118,13 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                             _isLoading = false;
                           });
 
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          final snackBar = ScaffoldMessenger.of(context);
+                          snackBar.showSnackBar(
                             const SnackBar(content: Text("Bilgiler kaydedildi")),
                           );
 
                           Future.delayed(const Duration(seconds: 1), () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => MyCommunities(toplulukIsmi: toplulukAdController.text )));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const MyCommunities()));
                           });
                         }
                       },

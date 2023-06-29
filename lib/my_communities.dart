@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:publeet1/add_community.dart';
 
 class MyCommunities extends StatefulWidget {
-  final String toplulukIsmi;
-  const MyCommunities({Key? key, required this.toplulukIsmi,}) : super(key: key);
+  const MyCommunities({Key? key}) : super(key: key);
 
   @override
   State<MyCommunities> createState() => _MyCommunitiesState();
@@ -14,7 +13,6 @@ class _MyCommunitiesState extends State<MyCommunities> {
   @override
   void initState() {
     super.initState();
-    topluluklar = widget.toplulukIsmi.split(',');
   }
 
   @override

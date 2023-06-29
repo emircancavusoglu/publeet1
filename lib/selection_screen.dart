@@ -20,25 +20,6 @@ class SelectionScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 16),
-              const Row(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        "Kullanıcı Bilgisi",
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      Icon(Icons.person),
-                    ],
-                  ),
-                ],
-              ),
               const SizedBox(height: 50),
               const Column(
                 children: [
@@ -119,7 +100,7 @@ class SelectionScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const MyCommunities(toplulukIsmi:"" ),
+                          builder: (context) => const MyCommunities(),
                         ),
                       );
                     },
