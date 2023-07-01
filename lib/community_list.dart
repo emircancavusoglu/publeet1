@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:publeet1/request_sent.dart';
-import 'find_community.dart';
 
 class CommunityList extends StatelessWidget {
   final String? address;
@@ -44,7 +43,7 @@ class CommunityList extends StatelessWidget {
                   SizedBox(width: 8,),
                   Text(" 8 km uzaklıkta",style: TextStyle(color: Colors.deepPurple,fontWeight: FontWeight.bold),),
                   SizedBox(width: 3,),
-                  Icon(Icons.stars_outlined)
+                  Icon(Icons.stars_outlined),
                 ],
               ),
               subtitle: Text(address ?? ""),
