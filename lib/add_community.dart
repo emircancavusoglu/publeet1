@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:publeet1/my_communities.dart';
 import 'package:publeet1/sign_location.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddCommunityForm extends StatefulWidget {
   const AddCommunityForm({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
   final _formKey = GlobalKey<FormState>();
   final toplulukAdController = TextEditingController();
   final _emailController = TextEditingController();
-  final _description = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   bool _isLoading = false;
 
@@ -21,7 +22,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
   void dispose() {
     toplulukAdController.dispose();
     _emailController.dispose();
-    _description.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -85,7 +86,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
-                      controller: _description,
+                      controller: _descriptionController,
                       decoration: const InputDecoration(
                         labelText: "Açıklama",
                         border: UnderlineInputBorder(),
@@ -107,12 +108,17 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                     ElevatedButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.deepPurple)),
                       onPressed: () async {
+
+                        FirebaseFirestore.instance.collection("community").doc("New community").set({
+                          "toplulukIsmi": toplulukAdController.text,
+                          "email": _emailController.text,
+                          "description" : _descriptionController.text
+                        });
+
                         if (_formKey.currentState!.validate()) {
                           setState(() {
                             _isLoading = true;
                           });
-
-                          await Future.delayed(const Duration(seconds: 1));
 
                           setState(() {
                             _isLoading = false;
