@@ -14,7 +14,7 @@ class AuthServices{
     try{
       final UserCredential userCredential =  await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
       if(userCredential.user != null){
-        _registerUser(email: email, password: password);
+        registerUser(email: email, password: password);
     }
     }on FirebaseAuthException catch(e){
       Fluttertoast.showToast(msg: e.message!,toastLength: Toast.LENGTH_LONG);
@@ -31,7 +31,7 @@ class AuthServices{
       Fluttertoast.showToast(msg: e.message!,toastLength: Toast.LENGTH_LONG);
     }
 }
-  Future<void> _registerUser({required String email, required String password})async{
+  Future<void> registerUser({required String email, required String password})async{
   await usersCollection.doc().set({
     "email": email,
     "password": password

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:publeet1/request_sent.dart';
+import 'package:publeet1/services/auth_services.dart';
 import 'package:publeet1/sign_location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'login_screen.dart';
+
 
 class AddCommunityForm extends StatefulWidget {
   const AddCommunityForm({Key? key}) : super(key: key);
@@ -15,6 +19,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
   final toplulukAdController = TextEditingController();
   final _emailController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool _isLoading = false;
 
@@ -108,10 +113,13 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                     ElevatedButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.deepPurple)),
                       onPressed: () async {
+                        final currentUser = _auth.currentUser;
+                        final userEmail = currentUser?.email ?? '';
                         await FirebaseFirestore.instance.collection("community").add({
                           "toplulukIsmi": toplulukAdController.text,
                           "email": _emailController.text,
                           "description": _descriptionController.text,
+                          "user_info" : userEmail!
                         });
 
                         if (_formKey.currentState!.validate()) {
