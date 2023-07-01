@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:publeet1/my_communities.dart';
+import 'package:publeet1/request_sent.dart';
 import 'package:publeet1/sign_location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -108,11 +108,10 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                     ElevatedButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.deepPurple)),
                       onPressed: () async {
-
-                        FirebaseFirestore.instance.collection("community").doc("New community").set({
+                        await FirebaseFirestore.instance.collection("community").add({
                           "toplulukIsmi": toplulukAdController.text,
                           "email": _emailController.text,
-                          "description" : _descriptionController.text
+                          "description": _descriptionController.text,
                         });
 
                         if (_formKey.currentState!.validate()) {
@@ -129,9 +128,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                             const SnackBar(content: Text("Bilgiler kaydedildi")),
                           );
 
-                          Future.delayed(const Duration(seconds: 1), () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const MyCommunities()));
-                          });
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestSent(),));
                         }
                       },
                       child: const Text("Kaydet"),
