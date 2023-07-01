@@ -21,16 +21,16 @@ class RequestCommunity extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Container(
-                    alignment: Alignment.center,
-                    child: const ListTile(
-                      leading: Icon(Icons.check_circle, color: Colors.white, size: 48),
+                  const ListTile(
+                    leading: Padding(
+                      padding: EdgeInsets.only(left: 140),
+                      child: Icon(Icons.check_circle, color: Colors.white, size: 48),
                     ),
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: const ListTile(
-                      title: Text('Topluluk oluşturma isteğiniz gönderilmiştir. Topluluğunuz onaylandığında topluluklarım sayfasından görüntüleyebilirsiniz.', style: TextStyle(color: Colors.white)),
+                  const ListTile(
+                    title: Padding(
+                      padding: EdgeInsets.only(left: 25),
+                      child: Text('Topluluk oluşturma isteğiniz gönderilmiştir. Topluluğunuz onaylandığında topluluklarım sayfasından görüntüleyebilirsiniz.', style: TextStyle(color: Colors.white)),
                     ),
                   ),
                   const SizedBox(height: 15,),

@@ -45,88 +45,100 @@ class SelectionScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 100),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.group_add_outlined, color: Colors.black),
-                  const SizedBox(width: 8),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AddCommunityForm(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      "Topluluk Ekle",
-                      style: TextStyle(fontSize: 24, color: Colors.deepPurple),
+              Card(
+                color: Colors.white70,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.group_add_outlined, color: Colors.black),
+                    const SizedBox(width: 8),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AddCommunityForm(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Topluluk Ekle",
+                        style: TextStyle(fontSize: 24, color: Colors.deepPurple),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.search),
-                  const SizedBox(width: 8),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const FindCommunity(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      "Topluluk Bul",
-                      style: TextStyle(fontSize: 24, color: Colors.deepPurple),
+              Card(
+                color: Colors.white70,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.search),
+                    const SizedBox(width: 8),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const FindCommunity(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Topluluk Bul",
+                        style: TextStyle(fontSize: 24, color: Colors.deepPurple),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.group),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MyCommunities(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      "Topluluklarım",
-                      style: TextStyle(fontSize: 24, color: Colors.deepPurple),
+              Card(
+                color: Colors.white70,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.group),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyCommunities(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Topluluklarım",
+                        style: TextStyle(fontSize: 24, color: Colors.deepPurple),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.public),
-                  const SizedBox(width: 8),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CommunityScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      "Dünyadaki Topluluklar",
-                      style: TextStyle(fontSize: 24, color: Colors.deepPurple),
+              Card(
+                color: Colors.white70,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.public),
+                    const SizedBox(width: 8),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CommunityScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Dünyadaki Topluluklar",
+                        style: TextStyle(fontSize: 24, color: Colors.deepPurple),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(height: 40,),
               ElevatedButton.icon(onPressed: (){
