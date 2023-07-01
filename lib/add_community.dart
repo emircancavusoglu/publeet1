@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:publeet1/request_community.dart';
 import 'package:publeet1/request_sent.dart';
 import 'package:publeet1/services/auth_services.dart';
 import 'package:publeet1/sign_location.dart';
@@ -136,7 +137,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                             const SnackBar(content: Text("Bilgiler kaydedildi")),
                           );
 
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestSent(),));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity(),));
                         }
                       },
                       child: const Text("Kaydet"),
