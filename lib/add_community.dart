@@ -120,14 +120,12 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                           "toplulukIsmi": toplulukAdController.text,
                           "email": _emailController.text,
                           "description": _descriptionController.text,
-                          "user_info" : userEmail!
+                          "user_info" : userEmail
                         });
-
                         if (_formKey.currentState!.validate()) {
                           setState(() {
                             _isLoading = true;
                           });
-
                           setState(() {
                             _isLoading = false;
                           });

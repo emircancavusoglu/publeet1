@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:publeet1/find_community.dart';
+import 'package:publeet1/login_screen.dart';
 import 'my_communities.dart';
 import 'communityWorld.dart';
 import 'add_community.dart';
@@ -13,32 +14,27 @@ class SelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.deepPurple),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(5.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
               const Column(
                 children: [
-                  SizedBox(height: 16),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      "Kayıtlı Olduğun Topluluklar:",
-                      style: TextStyle(
-                        color: Colors.deepPurple,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline,
-                      ),
-                      textAlign: TextAlign.center,
+                  Text(
+                    "Kayıtlı Olduğun Topluluklar:",
+                    style: TextStyle(
+                      color: Colors.deepPurple,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                   Text(
-                    "Satranç Topluluğu",
+                    "",
                     style: TextStyle(
                       color: Colors.brown,
                       fontSize: 24,
@@ -132,6 +128,10 @@ class SelectionScreen extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 40,),
+              ElevatedButton.icon(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
+              }, icon: const Icon(Icons.logout_outlined), label: const Text("Çıkış Yap"))
             ],
           ),
         ),
