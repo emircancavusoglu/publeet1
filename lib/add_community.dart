@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:publeet1/request_community.dart';
-import 'package:publeet1/request_sent.dart';
-import 'package:publeet1/services/auth_services.dart';
-import 'package:publeet1/sign_location.dart';
+import 'package:publeet1/location/sign_location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'login_screen.dart';
-
-
 class AddCommunityForm extends StatefulWidget {
   const AddCommunityForm({Key? key}) : super(key: key);
 
@@ -20,6 +15,8 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
   final toplulukAdController = TextEditingController();
   final _emailController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final latitude = KonumKayit.latitude;
+  final longitude = KonumKayit.longitude;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool _isLoading = false;
@@ -120,7 +117,9 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                           "toplulukIsmi": toplulukAdController.text,
                           "email": _emailController.text,
                           "description": _descriptionController.text,
-                          "user_info" : userEmail
+                          "user_info" : userEmail,
+                          "latitude" : KonumKayit.latitude,
+                          "longitude" : KonumKayit.longitude
                         });
                         if (_formKey.currentState!.validate()) {
                           setState(() {
@@ -134,7 +133,6 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                           snackBar.showSnackBar(
                             const SnackBar(content: Text("Bilgiler kaydedildi")),
                           );
-
                           Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity(),));
                         }
                       },

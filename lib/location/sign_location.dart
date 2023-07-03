@@ -8,6 +8,9 @@ void main() {
 }
 
 class KonumKayit extends StatefulWidget {
+  static double? latitude;
+  static double? longitude;
+
   const KonumKayit({Key? key}) : super(key: key);
 
   @override
@@ -39,8 +42,8 @@ class _KonumKayitState extends State<KonumKayit> {
 
     try {
       final List<Placemark> placemarks = await placemarkFromCoordinates(
-        _userPosition!.latitude,
-        _userPosition!.longitude,
+        KonumKayit.latitude = _userPosition!.latitude,
+        KonumKayit.longitude = _userPosition!.longitude,
       );
       if (placemarks.isNotEmpty) {
         setState(() {
@@ -93,7 +96,7 @@ class _KonumKayitState extends State<KonumKayit> {
           const SizedBox(height: 16),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Colors.deepPurple,
+              backgroundColor: Colors.deepPurple,
             ),
             onPressed: () {
               setState(() {
@@ -129,6 +132,7 @@ class _KonumKayitState extends State<KonumKayit> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                     onPressed: () {
+
                       Navigator.pop(context);
                       setState(() {
                         _showDialog = false;
