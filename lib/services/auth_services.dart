@@ -28,8 +28,14 @@ class AuthServices{
         navigator.push(MaterialPageRoute(builder: (context) => SelectionScreen(),));
       }
     } on FirebaseAuthException catch(e){
-      Fluttertoast.showToast(msg: e.message!,toastLength: Toast.LENGTH_LONG);
-    }
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text(e.message!),
+          );
+        },
+      );    }
 }
   Future<void> registerUser({required String email, required String password})async{
   await usersCollection.doc().set({

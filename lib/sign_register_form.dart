@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:publeet1/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:publeet1/login_screen.dart';
 import 'package:publeet1/services/auth_services.dart';
 
 class UserRegistrationScreen extends StatefulWidget {
@@ -37,27 +37,32 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
             );
           },
         );
-      } else {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Kayıt İşlemi"),
-              content: const Text("Kayıt işleminiz başarıyla gerçekleşmiştir."),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LoginScreen()),
-                    );
-                  },
-                  child: const Text('Tamam'),
-                ),
-              ],
-            );
-          },
-        );
+      }
+      if(passwordController.text.length < 6){
+        showDialog(context: context, builder: (BuildContext context){
+          return AlertDialog(
+            title: const Text("Şifre Hatası."),
+            content: const Text("Girdiğiniz şifre değeri 6 haneden fazla olmalıdır."),
+            actions: [
+              TextButton(onPressed: (){
+                Navigator.pop(context);
+              }, child: const Text("Tamam")),
+            ],
+          );
+        });
+      }
+      else {
+        showDialog(context: context, builder: (BuildContext context){
+          return AlertDialog(
+            title: const Text("Kayıt Başarılı."),
+            content: const Text("Kaydınız başarıyla gerçekleşmiştir."),
+            actions: [
+              TextButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
+              }, child: const Text("Tamam")),
+            ],
+          );
+        });
       }
     }
   }
