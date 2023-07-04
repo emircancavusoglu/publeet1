@@ -3,6 +3,7 @@ import 'package:publeet1/request_community.dart';
 import 'package:publeet1/location/sign_location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 class AddCommunityForm extends StatefulWidget {
   const AddCommunityForm({Key? key}) : super(key: key);
 
@@ -15,8 +16,6 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
   final communityNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final latitude = KonumKayit.latitude;
-  final longitude = KonumKayit.longitude;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool _isLoading = false;
@@ -56,7 +55,9 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                         color: Colors.deepPurple,
                       ),
                     ),
-                    const SizedBox(height: 12,),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     TextFormField(
                       controller: communityNameController,
                       decoration: const InputDecoration(
@@ -102,8 +103,11 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                       },
                     ),
                     IconButton(
-                      onPressed: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const KonumKayit(),));
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const KonumKayit()),
+                        );
                       },
                       icon: const Icon(Icons.add_location_alt),
                     ),
@@ -113,18 +117,25 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                       onPressed: () async {
                         final currentUser = _auth.currentUser;
                         final userEmail = currentUser?.email ?? '';
-                        await FirebaseFirestore.instance.collection("community").add({
-                          "communityName": communityNameController.text,
-                          "email": _emailController.text,
-                          "description": _descriptionController.text,
-                          "user_info" : userEmail,
-                          "latitude" : KonumKayit.latitude,
-                          "longitude" : KonumKayit.longitude
-                        });
+
                         if (_formKey.currentState!.validate()) {
                           setState(() {
                             _isLoading = true;
                           });
+
+                          await FirebaseFirestore.instance.collection("users").doc(userEmail).set({
+                            "communityName": communityNameController.text,
+                          });
+
+                          await FirebaseFirestore.instance.collection("community").add({
+                            "communityName": communityNameController.text,
+                            "email": _emailController.text,
+                            "description": _descriptionController.text,
+                            "user_info": userEmail,
+                            "latitude": KonumKayit.latitude,
+                            "longitude": KonumKayit.longitude,
+                          });
+
                           setState(() {
                             _isLoading = false;
                           });
@@ -133,7 +144,8 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                           snackBar.showSnackBar(
                             const SnackBar(content: Text("Bilgiler kaydedildi")),
                           );
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity(),));
+
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity()));
                         }
                       },
                       child: const Text("Kaydet"),
