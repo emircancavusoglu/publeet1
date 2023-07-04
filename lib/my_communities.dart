@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:publeet1/selection_screen.dart';
 
 class MyCommunities extends StatefulWidget {
@@ -8,7 +8,9 @@ class MyCommunities extends StatefulWidget {
   @override
   State<MyCommunities> createState() => _MyCommunitiesState();
 }
+
 class _MyCommunitiesState extends State<MyCommunities> {
+  GetData data = GetData();
 
   @override
   void initState() {
@@ -39,7 +41,18 @@ class _MyCommunitiesState extends State<MyCommunities> {
           ],
         ),
       ),
-      body: Text(""),
+      body: FutureBuilder<String>(
+        future: data.getData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Text(snapshot.data.toString());
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return const CircularProgressIndicator();
+          }
+        },
+      ),
     );
   }
 }

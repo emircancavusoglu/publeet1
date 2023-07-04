@@ -109,7 +109,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                     TextButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const MyCommunities(),));
-                        getData();
+                        GetData().getData();
                       },
                       child: const Text(
                         "Topluluklarım",
@@ -161,17 +161,21 @@ class _SelectionScreenState extends State<SelectionScreen> {
     );
   }
 }
-void getData(){
-  FirebaseFirestore.instance
-      .collection('community')
-      .doc('OIJA9fZW5iXwr8qvxnc0')
-      .get()
-      .then((DocumentSnapshot documentSnapshot) {
+
+class GetData {
+  Future<String> getData() async {
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('community')
+        .doc('OIJA9fZW5iXwr8qvxnc0')
+        .get();
+
     if (documentSnapshot.exists) {
       var communityName = documentSnapshot['communityName'];
       print('communityName: $communityName');
+      return communityName.toString();
     } else {
       print('Document does not exist in the database');
+      return '';
     }
-  });
+  }
 }
