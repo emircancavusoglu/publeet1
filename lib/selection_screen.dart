@@ -163,7 +163,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
 }
 
 class GetData {
-  Future<String> getData() async {
+  Future<List<String>> getData() async {
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
         .collection('community')
         .doc('OIJA9fZW5iXwr8qvxnc0')
@@ -172,10 +172,10 @@ class GetData {
     if (documentSnapshot.exists) {
       var communityName = documentSnapshot['communityName'];
       print('communityName: $communityName');
-      return communityName.toString();
+      return [communityName.toString()]; // Listeye dönüştürüldü
     } else {
       print('Document does not exist in the database');
-      return '';
+      return []; // Boş liste döndürüldü
     }
   }
 }

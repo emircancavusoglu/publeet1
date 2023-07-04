@@ -41,15 +41,26 @@ class _MyCommunitiesState extends State<MyCommunities> {
           ],
         ),
       ),
-      body: FutureBuilder<String>(
+      body: FutureBuilder<List<String>>(
         future: data.getData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Text(snapshot.data.toString());
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                return Text(
+                  snapshot.data![index],
+                  style: const TextStyle(
+                    fontSize: 20,
+                    decorationColor: Colors.deepPurple,
+                  ),
+                );
+              },
+            );
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
