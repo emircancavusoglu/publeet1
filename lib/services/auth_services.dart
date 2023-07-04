@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:publeet1/selection_screen.dart';
 import 'package:publeet1/login_screen.dart';
-
+import 'package:publeet1/my_communities.dart';
 
 class AuthServices{
   final usersCollection = FirebaseFirestore.instance.collection("users");
   final firebaseAuth = FirebaseAuth.instance;
 
+  
   Future<void> signUp({required String email, required String password})async{
     try{
       final UserCredential userCredential =  await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);

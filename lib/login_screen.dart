@@ -1,25 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:publeet1/services/auth_services.dart';
 import 'package:publeet1/sign_register_form.dart';
-import 'package:publeet1/splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'selection_screen.dart';
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Publeet',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: const splash_screen(),
-    );
-  }
-}
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -35,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> navigateToRegistrationScreen() async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SelectionScreen()),
+      MaterialPageRoute(builder: (context) => const SelectionScreen()),
     ).then((value) {
       // Ekran değiştikten sonra burası çalışır
       userNameController.clear();

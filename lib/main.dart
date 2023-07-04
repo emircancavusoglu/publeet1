@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:publeet1/splash_screen.dart';
+import 'package:publeet1/login_screen.dart';
 import 'initialize/app_initialize.dart';
 
 
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepPurple,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const splash_screen(),
+      home: const LoginScreen(),
     );
   }
 }

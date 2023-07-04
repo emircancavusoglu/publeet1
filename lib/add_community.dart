@@ -12,7 +12,7 @@ class AddCommunityForm extends StatefulWidget {
 
 class _AddCommunityFormState extends State<AddCommunityForm> {
   final _formKey = GlobalKey<FormState>();
-  final toplulukAdController = TextEditingController();
+  final communityNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _descriptionController = TextEditingController();
   final latitude = KonumKayit.latitude;
@@ -23,7 +23,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
 
   @override
   void dispose() {
-    toplulukAdController.dispose();
+    communityNameController.dispose();
     _emailController.dispose();
     _descriptionController.dispose();
     super.dispose();
@@ -58,7 +58,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                     ),
                     const SizedBox(height: 12,),
                     TextFormField(
-                      controller: toplulukAdController,
+                      controller: communityNameController,
                       decoration: const InputDecoration(
                         labelText: "Topluluk İsmi",
                         border: UnderlineInputBorder(),
@@ -114,7 +114,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                         final currentUser = _auth.currentUser;
                         final userEmail = currentUser?.email ?? '';
                         await FirebaseFirestore.instance.collection("community").add({
-                          "toplulukIsmi": toplulukAdController.text,
+                          "communityName": communityNameController.text,
                           "email": _emailController.text,
                           "description": _descriptionController.text,
                           "user_info" : userEmail,

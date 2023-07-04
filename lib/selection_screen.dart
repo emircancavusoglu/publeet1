@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:publeet1/find_community.dart';
 import 'package:publeet1/login_screen.dart';
 import 'my_communities.dart';
 import 'communityWorld.dart';
 import 'add_community.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class SelectionScreen extends StatelessWidget {
+
+class SelectionScreen extends StatefulWidget {
+  const SelectionScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SelectionScreen> createState() => _SelectionScreenState();
+}
+
+class _SelectionScreenState extends State<SelectionScreen> {
   final TextEditingController toplulukAdController = TextEditingController();
-
-
-  SelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -101,12 +108,8 @@ class SelectionScreen extends StatelessWidget {
                     const Icon(Icons.group),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MyCommunities(),
-                          ),
-                        );
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const MyCommunities(),));
+                        getData();
                       },
                       child: const Text(
                         "Topluluklarım",
@@ -140,14 +143,35 @@ class SelectionScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 40,),
-              ElevatedButton.icon(onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
-              }, icon: const Icon(Icons.logout_outlined), label: const Text("Çıkış Yap"))
+              const SizedBox(height: 40),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  );
+                },
+                icon: const Icon(Icons.logout_outlined),
+                label: const Text("Çıkış Yap"),
+              )
             ],
           ),
         ),
       ),
     );
   }
+}
+void getData(){
+  FirebaseFirestore.instance
+      .collection('community')
+      .doc('OIJA9fZW5iXwr8qvxnc0')
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      var communityName = documentSnapshot['communityName'];
+      print('communityName: $communityName');
+    } else {
+      print('Document does not exist in the database');
+    }
+  });
 }
