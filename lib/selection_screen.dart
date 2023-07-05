@@ -165,8 +165,8 @@ class _SelectionScreenState extends State<SelectionScreen> {
 class GetData {
   Future<List<String>> getData() async {
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-        .collection('community')
-        .doc('OIJA9fZW5iXwr8qvxnc0')
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email.toString())
         .get();
 
     if (documentSnapshot.exists) {
