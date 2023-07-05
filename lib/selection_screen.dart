@@ -109,7 +109,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                     TextButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const MyCommunities(),));
-                        GetData().getData();
+                        GetData().getCommunityNames();
                       },
                       child: const Text(
                         "Topluluklarım",
@@ -160,22 +160,28 @@ class _SelectionScreenState extends State<SelectionScreen> {
       ),
     );
   }
-}
-
-class GetData {
-  Future<List<String>> getData() async {
-    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+}class GetData {
+  Stream<List<String>> getCommunityNames() {
+    return FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.email.toString())
-        .get();
-
-    if (documentSnapshot.exists) {
-      var communityName = documentSnapshot['communityName'];
-      print('communityName: $communityName');
-      return [communityName.toString()]; // Listeye dönüştürüldü
-    } else {
-      print('Document does not exist in the database');
-      return []; // Boş liste döndürüldü
-    }
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.exists) {
+        List<String> communityNames = [];
+        var data = snapshot.data();
+        if (data != null) {
+          data.forEach((key, value) {
+            if (key.startsWith('communityName')) {
+              communityNames.add(value.toString());
+            }
+          });
+        }
+        return communityNames;
+      } else {
+        print('Document does not exist in the database');
+        return [];
+      }
+    });
   }
 }

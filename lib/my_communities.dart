@@ -13,11 +13,6 @@ class _MyCommunitiesState extends State<MyCommunities> {
   GetData data = GetData();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -41,24 +36,36 @@ class _MyCommunitiesState extends State<MyCommunities> {
           ],
         ),
       ),
-      body: FutureBuilder<List<String>>(
-        future: data.getData(),
+      body: StreamBuilder<List<String>>(
+        stream: data.getCommunityNames(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return Text(
-                  snapshot.data![index],
-                  style: const TextStyle(
-                    fontSize: 20,
-                    decorationColor: Colors.deepPurple,
-                  ),
-                );
-              },
-            );
+            List<String>? communityNames = snapshot.data;
+            if (communityNames != null && communityNames.isNotEmpty) {
+              return ListView.builder(
+                itemCount: communityNames.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(
+                      communityNames[index],
+                      style: const TextStyle(
+                        fontSize: 20,
+                        decorationColor: Colors.deepPurple,
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else {
+              return const Center(
+                child: Text(
+                  'Topluluk bulunamadı.',
+                  style: TextStyle(fontSize: 18),
+                ),
+              );
+            }
           } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return Text('Hata: ${snapshot.error}');
           } else {
             return const Center(child: CircularProgressIndicator());
           }
