@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:publeet1/selection_screen.dart';
 
+import 'community_details.dart';
+
 class MyCommunities extends StatefulWidget {
   const MyCommunities({Key? key}) : super(key: key);
 
@@ -37,7 +39,7 @@ class _MyCommunitiesState extends State<MyCommunities> {
         ),
       ),
       body: StreamBuilder<List<String>>(
-        stream: data.getCommunityNames(),
+        stream: data.getData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<String>? communityNames = snapshot.data;
@@ -46,13 +48,9 @@ class _MyCommunitiesState extends State<MyCommunities> {
                 itemCount: communityNames.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(
-                      communityNames[index],
-                      style: const TextStyle(
-                        fontSize: 20,
-                        decorationColor: Colors.deepPurple,
-                      ),
-                    ),
+                    title: TextButton(onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const CommunityDetails(),));
+                    },child: Text(communityNames[index]),)
                   );
                 },
               );

@@ -123,7 +123,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                             _isLoading = true;
                           });
 
-                          await FirebaseFirestore.instance.collection("users").doc(userEmail).set({
+                          await FirebaseFirestore.instance.collection("community").doc(userEmail).set({
                             "communityName": communityNameController.text,
                           });
 
