@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:publeet1/community_details.dart';
 import 'package:publeet1/request_sent.dart';
 
 class CommunityList extends StatelessWidget {
@@ -17,7 +18,7 @@ class CommunityList extends StatelessWidget {
         children: [
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> const RequestSent()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const CommunityDetails()));
             },
             child: ListTile(
               title: const Row(
@@ -34,7 +35,7 @@ class CommunityList extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> const RequestSent()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const CommunityDetails()));
             },
             child: ListTile(
               title: const Row(
@@ -51,7 +52,7 @@ class CommunityList extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> const RequestSent()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const CommunityDetails()));
             },
             child: ListTile(
               title: const Row(

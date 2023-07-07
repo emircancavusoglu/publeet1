@@ -26,7 +26,7 @@ class AuthServices{
     try{
       final UserCredential userCredential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       if(userCredential.user != null){
-        navigator.push(MaterialPageRoute(builder: (context) => SelectionScreen(),));
+        navigator.push(MaterialPageRoute(builder: (context) => const SelectionScreen(),));
       }
     } on FirebaseAuthException catch(e){
       showDialog(
