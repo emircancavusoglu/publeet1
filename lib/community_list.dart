@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:publeet1/community_details.dart';
-import 'package:publeet1/request_sent.dart';
 
 class CommunityList extends StatelessWidget {
   final String? address;
@@ -19,69 +18,125 @@ class CommunityList extends StatelessWidget {
         children: [
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => const CommunityDetails()));
-            },
-            child: ListTile(
-              title: const Row(
-                children: [
-                  Text("Satranç Topluluğu"),
-                  SizedBox(width: 8,),
-                  Text(" 5 km uzaklıkta", style: TextStyle(
-                      color: Colors.deepPurple, fontWeight: FontWeight.bold),),
-                  SizedBox(width: 3,),
-                  Icon(Icons.stars_outlined)
-                ],
-              ),
-              subtitle: Text(address ?? ""),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => const CommunityDetails()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CommunityDetails()),
+              );
             },
             child: FutureBuilder(
-              future: getRandomCommunityName(),
+              future: getRandomCommunityName(0),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator()); // Veri alınıncaya kadar yüklenme göstergesi gösterin
+                  return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasData) {
-                  return Row(
-                    children: [
-                      Text(snapshot.data.toString()),
-                      const SizedBox(width: 8,),
-                      const Text(" 8 km uzaklıkta", style: TextStyle(
-                          color: Colors.deepPurple,
-                          fontWeight: FontWeight.bold)),
-                      const SizedBox(width: 3,),
-                      const Icon(Icons.stars_outlined),
-                    ],
+                  return ListTile(
+                    title: Row(
+                      children: [
+                        const SizedBox(width: 8),
+                        Text(
+                          snapshot.data.toString().toUpperCase(),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          "8 km uzaklıkta",
+                          style: TextStyle(
+                            color: Colors.deepPurple,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 3),
+                        const Icon(Icons.stars_outlined),
+                      ],
+                    ),
+                    subtitle: Text(address ?? ""),
                   );
                 }
-                return Text("Error"); // Veri alınamazsa hata mesajı gösterin
+                return const Text("Error");
               },
             ),
-
           ),
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => const CommunityDetails()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CommunityDetails()),
+              );
             },
-            child: ListTile(
-              title: const Row(
-                children: [
-                  Text("Gezi Topluluğu"),
-                  SizedBox(width: 8,),
-                  Text(" 15 km uzaklıkta", style: TextStyle(
-                      color: Colors.deepPurple, fontWeight: FontWeight.bold),),
-                  SizedBox(width: 3,),
-                  Icon(Icons.stars_outlined)
-                ],
-              ),
-              subtitle: Text(address ?? ""),
+            child: FutureBuilder(
+              future: getRandomCommunityName(1),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasData) {
+                  return ListTile(
+                    title: Row(
+                      children: [
+                        const SizedBox(width: 8),
+                        Text(
+                          snapshot.data.toString().toUpperCase(),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          "8 km uzaklıkta",
+                          style: TextStyle(
+                            color: Colors.deepPurple,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 3),
+                        const Icon(Icons.stars_outlined),
+                      ],
+                    ),
+                    subtitle: Text(address ?? ""),
+                  );
+                }
+                return Text("Error");
+              },
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CommunityDetails()),
+              );
+            },
+            child: FutureBuilder(
+              future: getRandomCommunityName(2),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasData) {
+                  return ListTile(
+                    title: Row(
+                      children: [
+                        const SizedBox(width: 8),
+                        Text(
+                          snapshot.data.toString().toUpperCase(),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          "15 km uzaklıkta",
+                          style: TextStyle(
+                            color: Colors.deepPurple,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 3),
+                        const Icon(Icons.stars_outlined),
+                      ],
+                    ),
+                    subtitle: Text(address ?? ""),
+                  );
+                }
+                return const Text("Error");
+              },
             ),
           ),
         ],
@@ -89,15 +144,15 @@ class CommunityList extends StatelessWidget {
     );
   }
 
-  Future<String> getRandomCommunityName() async {
+  Future<String> getRandomCommunityName(int randomIndex) async {
     var collectionRef = FirebaseFirestore.instance.collection('community');
     var snapshot = await collectionRef.get();
     if (snapshot.docs.isEmpty) {
       return "";
     }
-    var randomDoc = snapshot.docs.first;
-    var communityName = randomDoc.get(
-        'communityName');
+
+    var randomDoc = snapshot.docs.elementAt(randomIndex); // Belirli bir indeksteki belgeye erişim
+    var communityName = randomDoc.get('communityName');
     return communityName.toString();
   }
 }
