@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:publeet1/forget_password.dart';
 import 'package:publeet1/services/auth_services.dart';
 import 'package:publeet1/sign_register_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -87,7 +88,9 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 12),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgetPassword(),));
+              },
               child: const Text(
                 "Şifreni mi unuttun ?",
                 style: TextStyle(
