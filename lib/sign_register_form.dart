@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:publeet1/login_screen.dart';
-import 'package:publeet1/services/auth_services.dart';
+import 'package:publeet1/confirm_email_register.dart';
 
 class UserRegistrationScreen extends StatefulWidget {
   const UserRegistrationScreen({Key? key}) : super(key: key);
 
   @override
-  _UserRegistrationScreenState createState() => _UserRegistrationScreenState();
+  UserRegistrationScreenState createState() => UserRegistrationScreenState();
 }
 
-class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
+class UserRegistrationScreenState extends State<UserRegistrationScreen> {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
   void _submitForm() {
-    AuthServices().signUp(email: emailController.text, password: passwordController.text);
     if (formKey.currentState!.validate()) {
       if (passwordController.text != confirmPasswordController.text) {
         showDialog(
@@ -52,17 +49,9 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
         });
       }
       else {
-        showDialog(context: context, builder: (BuildContext context){
-          return AlertDialog(
-            title: const Text("Kayıt Başarılı."),
-            content: const Text("Kaydınız başarıyla gerçekleşmiştir."),
-            actions: [
-              TextButton(onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
-              }, child: const Text("Tamam")),
-            ],
-          );
-        });
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmEmailRegister(
+          email : emailController.text, password: passwordController.text,
+        ),));
       }
     }
   }
