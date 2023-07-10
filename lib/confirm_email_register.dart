@@ -47,7 +47,7 @@ class ConfirmEmailRegister extends StatelessWidget {
               onPressed: () {
                 AuthServices().signUp(email: register.emailController.text, password: register.passwordController.text);
               },
-              child: const Text('Kayıt Ol'),
+              child: const Text('Gönder'),
             ),
           ],
         ),

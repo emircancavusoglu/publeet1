@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:publeet1/forget_password.dart';
 import 'package:publeet1/services/auth_services.dart';
 import 'package:publeet1/sign_register_form.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'selection_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -21,7 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
       context,
       MaterialPageRoute(builder: (context) => const SelectionScreen()),
     ).then((value) {
-      // Ekran değiştikten sonra burası çalışır
       userNameController.clear();
       passwordController.clear();
     });
@@ -40,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
-                color: Colors.indigoAccent
+                color: Colors.indigoAccent,
               ),
             ),
             const SizedBox(height: 24),
@@ -73,10 +71,14 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                AuthServices().signIn(context,email: userNameController.text, password: passwordController.text);
+                AuthServices().signIn(
+                  context,
+                  email: userNameController.text,
+                  password: passwordController.text,
+                );
                 userNameController.clear();
                 passwordController.clear();
-                },
+              },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
                 backgroundColor: Colors.deepPurple,
@@ -89,10 +91,13 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 12),
             TextButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgetPassword(),));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ForgetPassword()),
+                );
               },
               child: const Text(
-                "Şifreni mi unuttun ?",
+                "Şifreni mi unuttun?",
                 style: TextStyle(
                   color: Colors.black,
                 ),
@@ -103,19 +108,73 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  "Hesabın yok mu ?",
+                  "Hesabın yok mu?",
                   style: TextStyle(
                     color: Colors.grey,
                   ),
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const UserRegistrationScreen(),));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const UserRegistrationScreen()),
+                    );
                   },
                   child: const Text(
-                    "Kayıt ol.",
+                    "Kayıt ol",
                     style: TextStyle(
                       color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      // Handle Google login here
+                    },
+                    icon: Image.asset(
+                      'assets/google.png',
+                      height: 12,
+                      width: 12,
+                    ),
+                    label: const Text(
+                      'Google ile giriş yap',
+                      style: TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(48, 48),
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    // Handle Apple login here
+                  },
+                  icon: const Icon(Icons.apple,color: Colors.grey,),
+                  label: const Text(
+                    'Apple ile giriş yap',
+                    style: TextStyle(
+                      color: Colors.black87,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(48, 48),
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
                 ),
