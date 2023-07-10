@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:publeet1/selection_screen.dart';
+import 'package:publeet1/utilities/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -8,6 +10,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  void toSelectionScreen(){
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SelectionScreen(),));
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,15 +32,23 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 100),
             ElevatedButton(
-              onPressed: () {
-                // Handle Google login here
+              onPressed: () async {
+                try {
+                  await signInWithGoogle();
+                  toSelectionScreen();
+                } catch (error) {
+                  print('Google Sign-In Error: $error');
+                }
+
+                toSelectionScreen();
+
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(300, 60),
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
               ),
               child: Row(
@@ -65,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
               ),
               child: const Row(
@@ -97,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
               ),
               child: const Row(

@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 @immutable
 class ApplicationInitialize{
   const ApplicationInitialize._();
-  static Future<void> init() async{ //init metodu, Flutter uygulamasının başlatılması ve
-    // Firebase hizmetlerinin başlatılması için kullanılır. Bu metot, uygulamanın başlangıcında çağrılır ve gerekli başlangıç ayarlarını gerçekleştirir.
+  static Future<void> init() async{
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
   }
-
 }
