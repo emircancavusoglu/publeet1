@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:publeet1/find_community.dart';
 import 'package:publeet1/login_screen.dart';
+import 'package:publeet1/utilities/google_sign_in.dart';
 import 'my_communities.dart';
 import 'communityWorld.dart';
 import 'add_community.dart';
@@ -16,6 +17,12 @@ class SelectionScreen extends StatefulWidget {
 
 class _SelectionScreenState extends State<SelectionScreen> {
   final TextEditingController toplulukAdController = TextEditingController();
+  void toLoginScreen(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,12 +132,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
               ),
               const SizedBox(height: 40),
               ElevatedButton.icon(
-                onPressed: () {
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginScreen()),
-                  );
+                onPressed: () async{
+                  await signOutWithGoogle();
+                  toLoginScreen();
                 },
                 icon: const Icon(Icons.logout_outlined),
                 label: const Text("Çıkış Yap"),
