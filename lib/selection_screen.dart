@@ -68,7 +68,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       },
                     ),
                   ),
-                  const SizedBox(width: 5,),
+                  const SizedBox(width: 5),
                   Expanded(
                     child: BubbleWidget(
                       icon: Icons.search,
@@ -91,6 +91,21 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 children: [
                   Expanded(
                     child: BubbleWidget(
+                      icon: Icons.public,
+                      text: "Keşfet",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CommunityScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 5,),
+                  Expanded(
+                    child: BubbleWidget(
                       icon: Icons.group,
                       text: "Topluluklarım",
                       onPressed: () {
@@ -105,25 +120,13 @@ class _SelectionScreenState extends State<SelectionScreen> {
                     ),
                   ),
                   const SizedBox(width: 5,),
-                  Expanded(
-                    child: BubbleWidget(
-                      icon: Icons.public,
-                      text: "Dünyadaki Topluluklar",
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CommunityScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+
                 ],
               ),
               const SizedBox(height: 40),
               ElevatedButton.icon(
                 onPressed: () {
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -167,11 +170,14 @@ class BubbleWidget extends StatelessWidget {
             children: [
               Icon(icon, color: Colors.white), // Set the icon color to white
               const SizedBox(height: 8),
-              Text(
-                text,
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.white, // Set the text color to white
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0), // Add horizontal spacing
+                child: Text(
+                  text,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    color: Colors.white, // Set the text color to white
+                  ),
                 ),
               ),
             ],

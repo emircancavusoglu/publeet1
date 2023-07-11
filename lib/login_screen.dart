@@ -12,7 +12,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
 
   void toSelectionScreen(){
-
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SelectionScreen(),));
   }
   @override
