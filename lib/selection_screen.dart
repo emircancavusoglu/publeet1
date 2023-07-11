@@ -7,7 +7,6 @@ import 'communityWorld.dart';
 import 'add_community.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class SelectionScreen extends StatefulWidget {
   const SelectionScreen({Key? key}) : super(key: key);
 
@@ -43,7 +42,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                   Text(
                     "",
                     style: TextStyle(
-                      color: Colors.brown,
+                      color: Colors.deepPurple,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -52,14 +51,13 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 ],
               ),
               const SizedBox(height: 100),
-              Card(
-                color: Colors.white70,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.group_add_outlined, color: Colors.black),
-                    const SizedBox(width: 8),
-                    TextButton(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: BubbleWidget(
+                      icon: Icons.group_add_outlined,
+                      text: "Topluluk Ekle",
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -68,22 +66,13 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           ),
                         );
                       },
-                      child: const Text(
-                        "Topluluk Ekle",
-                        style: TextStyle(fontSize: 24, color: Colors.deepPurple),
-                      ),
                     ),
-                  ],
-                ),
-              ),
-              Card(
-                color: Colors.white70,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.search),
-                    const SizedBox(width: 8),
-                    TextButton(
+                  ),
+                  const SizedBox(width: 5,),
+                  Expanded(
+                    child: BubbleWidget(
+                      icon: Icons.search,
+                      text: "Topluluk Bul",
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -92,41 +81,34 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           ),
                         );
                       },
-                      child: const Text(
-                        "Topluluk Bul",
-                        style: TextStyle(fontSize: 24, color: Colors.deepPurple),
-                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Card(
-                color: Colors.white70,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.group),
-                    TextButton(
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: BubbleWidget(
+                      icon: Icons.group,
+                      text: "Topluluklarım",
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const MyCommunities(),));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyCommunities(),
+                          ),
+                        );
                         GetData().getData();
                       },
-                      child: const Text(
-                        "Topluluklarım",
-                        style: TextStyle(fontSize: 24, color: Colors.deepPurple),
-                      ),
                     ),
-                  ],
-                ),
-              ),
-              Card(
-                color: Colors.white70,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.public),
-                    const SizedBox(width: 8),
-                    TextButton(
+                  ),
+                  const SizedBox(width: 5,),
+                  Expanded(
+                    child: BubbleWidget(
+                      icon: Icons.public,
+                      text: "Dünyadaki Topluluklar",
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -135,13 +117,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           ),
                         );
                       },
-                      child: const Text(
-                        "Dünyadaki Topluluklar",
-                        style: TextStyle(fontSize: 24, color: Colors.deepPurple),
-                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               const SizedBox(height: 40),
               ElevatedButton.icon(
@@ -153,7 +131,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 },
                 icon: const Icon(Icons.logout_outlined),
                 label: const Text("Çıkış Yap"),
-              )
+              ),
             ],
           ),
         ),
@@ -161,6 +139,49 @@ class _SelectionScreenState extends State<SelectionScreen> {
     );
   }
 }
+
+class BubbleWidget extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final VoidCallback onPressed;
+
+  const BubbleWidget({
+    Key? key,
+    required this.icon,
+    required this.text,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(30),
+      child: Container(
+        width: 160,
+        height: 160,
+        color: Colors.deepPurple, // Set the background color to deepPurple
+        child: TextButton(
+          onPressed: onPressed,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: Colors.white), // Set the icon color to white
+              const SizedBox(height: 8),
+              Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 24,
+                  color: Colors.white, // Set the text color to white
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class GetData {
   Stream<List<String>> getData() {
     return FirebaseFirestore.instance
