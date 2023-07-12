@@ -127,13 +127,13 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                             "communityName": communityNameController.text,
                           });
 
-                          await FirebaseFirestore.instance.collection("community").add({
+                          await FirebaseFirestore.instance.collection("community_requests").add({
                             "communityName": communityNameController.text,
-                            "email": _emailController.text,
                             "description": _descriptionController.text,
-                            "user_info": userEmail,
+                            "userEmail": userEmail,
                             "latitude": KonumKayit.latitude,
                             "longitude": KonumKayit.longitude,
+                            "requestStatus" : false,
                           });
 
                           setState(() {
@@ -144,7 +144,6 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                           snackBar.showSnackBar(
                             const SnackBar(content: Text("Bilgiler kaydedildi")),
                           );
-
                           Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity()));
                         }
                       },

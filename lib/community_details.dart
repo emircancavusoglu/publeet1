@@ -7,13 +7,16 @@ class CommunityDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final collectionRef = FirebaseFirestore.instance.collection("community");
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Community Details"),
         backgroundColor: Colors.deepPurple,
       ),
       body: FutureBuilder<QuerySnapshot>(
-        future: FirebaseFirestore.instance.collection("community").get(),
+        future: collectionRef.doc(user!.uid).collection("fields").get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
