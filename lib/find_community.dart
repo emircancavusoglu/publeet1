@@ -87,8 +87,6 @@ class _FindCommunityState extends State<FindCommunity> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Center(child: Text('Adres : ${_currentAddress ?? ""}',style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 22),)),
-              const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _getCurrentPosition,
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),

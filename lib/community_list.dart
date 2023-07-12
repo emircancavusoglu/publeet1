@@ -87,14 +87,14 @@ class CommunityList extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(width: 3),
+                        const SizedBox(width: 3),
                         const Icon(Icons.stars_outlined),
                       ],
                     ),
                     subtitle: Text(address ?? ""),
                   );
                 }
-                return Text("Error");
+                return const Text("Error");
               },
             ),
           ),

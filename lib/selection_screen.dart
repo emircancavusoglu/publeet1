@@ -122,7 +122,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                             builder: (context) => const MyCommunities(),
                           ),
                         );
-                        GetData().getData();
+                        getData(FirebaseAuth.instance.currentUser!.email.toString());
                       },
                     ),
                   ),
@@ -192,21 +192,18 @@ class BubbleWidget extends StatelessWidget {
   }
 }
 
-class GetData {
-  Stream<List<String>> getData() {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.email.toString())
-        .snapshots()
-        .map((snapshot) {
-      if (snapshot.exists) {
-        var communityName = snapshot['communityName'];
-        print('communityName: $communityName');
-        return [communityName.toString()]; // Listeye dönüştürüldü
-      } else {
-        print('Document does not exist in the database');
-        return []; // Boş liste döndürüldü
-      }
-    });
-  }
+Stream<List<String>> getData(String email) {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(email)
+      .snapshots()
+      .map((snapshot) {
+    if (snapshot.exists) {
+      var communityName = snapshot['communityName'];
+      return List<String>.from(communityName ?? []); // Liste dönüşümü, null kontrolü yapılıyor
+    } else {
+      return []; // Boş liste dönüşü
+    }
+  });
 }
+

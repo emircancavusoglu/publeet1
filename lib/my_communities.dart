@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:publeet1/selection_screen.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'community_details.dart';
+import 'login_screen.dart';
 
 class MyCommunities extends StatefulWidget {
   const MyCommunities({Key? key}) : super(key: key);
@@ -12,10 +12,18 @@ class MyCommunities extends StatefulWidget {
 }
 
 class _MyCommunitiesState extends State<MyCommunities> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   GetData data = GetData();
 
   @override
   Widget build(BuildContext context) {
+    User? currentUser = _auth.currentUser;
+
+    if (currentUser == null) {
+      // Kullanıcı oturum açmamışsa giriş ekranına yönlendir
+      return const LoginScreen();
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
@@ -39,7 +47,7 @@ class _MyCommunitiesState extends State<MyCommunities> {
         ),
       ),
       body: StreamBuilder<List<String>>(
-        stream: data.getData(),
+        stream: data.getData(currentUser.email.toString()),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<String>? communityNames = snapshot.data;
@@ -48,9 +56,15 @@ class _MyCommunitiesState extends State<MyCommunities> {
                 itemCount: communityNames.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: TextButton(onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const CommunityDetails(),));
-                    },child: Text(communityNames[index]),)
+                    title: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const CommunityDetails()),
+                        );
+                      },
+                      child: Text(communityNames[index]),
+                    ),
                   );
                 },
               );
@@ -70,5 +84,21 @@ class _MyCommunitiesState extends State<MyCommunities> {
         },
       ),
     );
+  }
+}
+class GetData {
+  Stream<List<String>> getData(String email) {
+    return FirebaseFirestore.instance
+        .collection('community')
+        .doc(email)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.exists) {
+        var communityName = snapshot['communityName'];
+        return List<String>.from([communityName]); // Liste dönüşümü
+      } else {
+        return []; // Boş liste dönüşü
+      }
+    });
   }
 }
