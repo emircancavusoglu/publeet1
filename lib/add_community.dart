@@ -73,23 +73,6 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
-                      controller: _emailController,
-                      decoration: const InputDecoration(
-                        labelText: "E-posta",
-                        border: UnderlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Lütfen e-posta adresinizi girin";
-                        }
-                        if (!value.contains("@")) {
-                          return "Geçersiz e-posta adresi";
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
                       controller: _descriptionController,
                       decoration: const InputDecoration(
                         labelText: "Açıklama",
