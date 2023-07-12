@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:publeet1/find_community.dart';
 import 'package:publeet1/login_screen.dart';
+import 'package:publeet1/my_notifications.dart';
 import 'package:publeet1/utilities/google_sign_in.dart';
 import 'my_communities.dart';
 import 'communityWorld.dart';
@@ -17,7 +18,8 @@ class SelectionScreen extends StatefulWidget {
 
 class _SelectionScreenState extends State<SelectionScreen> {
   final TextEditingController toplulukAdController = TextEditingController();
-  void toLoginScreen(){
+
+  void toLoginScreen() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -110,7 +112,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       },
                     ),
                   ),
-                  const SizedBox(width: 5,),
+                  const SizedBox(width: 5),
                   Expanded(
                     child: BubbleWidget(
                       icon: Icons.group,
@@ -126,16 +128,21 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       },
                     ),
                   ),
-                  const SizedBox(width: 5,),
+                  const SizedBox(width: 5),
                 ],
               ),
-              const SizedBox(height: 5,),
-              BubbleWidget(icon: Icons.notifications, text: "İsteklerim", onPressed: (){
-                // handle bubbleWidget
-              }),
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
+              BubbleWidget(
+                icon: Icons.notifications,
+                text: "İsteklerim",
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const MyNotifications(),));
+                },
+                width: 160,
+              ),
+              const SizedBox(height: 30),
               ElevatedButton.icon(
-                onPressed: () async{
+                onPressed: () async {
                   await signOutWithGoogle();
                   toLoginScreen();
                 },
@@ -154,12 +161,14 @@ class BubbleWidget extends StatelessWidget {
   final IconData icon;
   final String text;
   final VoidCallback onPressed;
+  final double width;
 
   const BubbleWidget({
     Key? key,
     required this.icon,
     required this.text,
     required this.onPressed,
+    this.width = 100,
   }) : super(key: key);
 
   @override
@@ -167,23 +176,23 @@ class BubbleWidget extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
       child: Container(
-        width: 100,
+        width: width,
         height: 120,
-        color: Colors.deepPurple, // Set the background color to deepPurple
+        color: Colors.deepPurple,
         child: TextButton(
           onPressed: onPressed,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: Colors.white), // Set the icon color to white
+              Icon(icon, color: Colors.white),
               const SizedBox(height: 8),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0), // Add horizontal spacing
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
                   text,
                   style: const TextStyle(
                     fontSize: 24,
-                    color: Colors.white, // Set the text color to white
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -203,10 +212,9 @@ Stream<List<String>> getData(String email) {
       .map((snapshot) {
     if (snapshot.exists) {
       var communityName = snapshot['communityName'];
-      return List<String>.from(communityName ?? []); // Liste dönüşümü, null kontrolü yapılıyor
+      return List<String>.from(communityName ?? []);
     } else {
-      return []; // Boş liste dönüşü
+      return [];
     }
   });
 }
-
