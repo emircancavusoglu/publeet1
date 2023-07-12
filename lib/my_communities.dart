@@ -40,7 +40,7 @@ class _MyCommunitiesState extends State<MyCommunities> {
             ),
             Text("Topluluklarım"),
             SizedBox(
-              width: 4,
+              width: 2,
             ),
             Icon(Icons.group),
           ],
@@ -55,43 +55,58 @@ class _MyCommunitiesState extends State<MyCommunities> {
               return ListView.builder(
                 itemCount: communityNames.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const CommunityDetails()),
-                        );
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(communityNames[index]),
-                          const SizedBox(height: 4),
-                          StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection('community_requests')
-                                .where('communityName', isEqualTo: communityNames[index])
-                                .snapshots(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                var requestStatus = snapshot.data!.docs[0].get('requestStatus');//sorgudan gelen belgelerin ilk belgesine
-                                return Text(
-                                  'Durum: ${requestStatus ?? "Hata"}',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: requestStatus == 'Beklemede' ? Colors.orange : Colors.black,
-                                  ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text('Hata: ${snapshot.error}');
-                              } else {
-                                return const CircularProgressIndicator();
-                              }
-                            },
-                          ),
-                        ],
+                  return Container(
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 13),
+                    child: ListTile(
+                      title: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const CommunityDetails()),
+                          );
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                communityNames[index],
+                                style: const TextStyle(
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('community_requests')
+                                  .where('communityName', isEqualTo: communityNames[index])
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  var requestStatus = snapshot.data!.docs[0].get('requestStatus');
+                                  return Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Durum: ${requestStatus ?? "Hata"}',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: requestStatus == 'Beklemede' ? Colors.orange : Colors.black,
+                                      ),
+                                    ),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return Text('Hata: ${snapshot.error}');
+                                } else {
+                                  return const CircularProgressIndicator();
+                                }
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
