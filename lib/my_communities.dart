@@ -63,7 +63,36 @@ class _MyCommunitiesState extends State<MyCommunities> {
                           MaterialPageRoute(builder: (context) => const CommunityDetails()),
                         );
                       },
-                      child: Text(communityNames[index]),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(communityNames[index]),
+                          const SizedBox(height: 4),
+                          StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('community_requests')
+                                .where('communityName', isEqualTo: communityNames[index])
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                var requestStatus = snapshot.data!.docs[0].get('requestStatus');//sorgudan gelen belgelerin ilk belgesine
+                                return Text(
+                                  'Durum: ${requestStatus ?? "Hata"}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: requestStatus == 'Beklemede' ? Colors.orange : Colors.black,
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text('Hata: ${snapshot.error}');
+                              } else {
+                                return const CircularProgressIndicator();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -86,6 +115,7 @@ class _MyCommunitiesState extends State<MyCommunities> {
     );
   }
 }
+
 class GetData {
   Stream<List<String>> getData(String email) {
     return FirebaseFirestore.instance
@@ -102,4 +132,3 @@ class GetData {
     });
   }
 }
-
