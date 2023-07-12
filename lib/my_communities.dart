@@ -89,16 +89,17 @@ class _MyCommunitiesState extends State<MyCommunities> {
 class GetData {
   Stream<List<String>> getData(String email) {
     return FirebaseFirestore.instance
-        .collection('community')
-        .doc(email)
+        .collection('community_requests')
+        .where('userEmail', isEqualTo: email)
         .snapshots()
         .map((snapshot) {
-      if (snapshot.exists) {
-        var communityName = snapshot['communityName'];
-        return List<String>.from([communityName]); // Liste dönüşümü
-      } else {
-        return []; // Boş liste dönüşü
+      List<String> communityNames = [];
+      for (var doc in snapshot.docs) {
+        var communityName = doc['communityName'];
+        communityNames.add(communityName);
       }
+      return communityNames;
     });
   }
 }
+

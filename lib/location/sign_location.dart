@@ -88,11 +88,10 @@ class _KonumKayitState extends State<KonumKayit> {
           address += ', ${placemark.country}';
         }
       }
-
       child = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(location),
+          const Text("location"), //normalde string değil
           const SizedBox(height: 16),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
