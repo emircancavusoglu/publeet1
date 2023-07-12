@@ -127,10 +127,13 @@ class _SelectionScreenState extends State<SelectionScreen> {
                     ),
                   ),
                   const SizedBox(width: 5,),
-
                 ],
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 5,),
+              BubbleWidget(icon: Icons.notifications, text: "İsteklerim", onPressed: (){
+                // handle bubbleWidget
+              }),
+              const SizedBox(height: 20),
               ElevatedButton.icon(
                 onPressed: () async{
                   await signOutWithGoogle();
@@ -164,8 +167,8 @@ class BubbleWidget extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
       child: Container(
-        width: 160,
-        height: 160,
+        width: 100,
+        height: 120,
         color: Colors.deepPurple, // Set the background color to deepPurple
         child: TextButton(
           onPressed: onPressed,
