@@ -30,7 +30,7 @@ class RequestCommunity extends StatelessWidget {
                   const ListTile(
                     title: Padding(
                       padding: EdgeInsets.only(left: 25),
-                      child: Text('Topluluk oluşturma isteğiniz gönderilmiştir. Topluluğunuz onaylandığında topluluklarım sayfasından görüntüleyebilirsiniz.', style: TextStyle(color: Colors.white)),
+                      child: Text('Topluluk oluşturma isteğiniz gönderilmiştir. İsteklerim sayfasından kontrol edebilirsiniz.', style: TextStyle(color: Colors.white)),
                     ),
                   ),
                   const SizedBox(height: 15,),
