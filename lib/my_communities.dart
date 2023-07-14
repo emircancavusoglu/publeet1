@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:publeet1/my_communities.dart';
-import 'login_screen.dart';
+import 'package:publeet1/community_details.dart';
 
 class MyCommunities extends StatefulWidget {
   const MyCommunities({Key? key}) : super(key: key);
@@ -58,12 +57,15 @@ class _MyCommunitiesState extends State<MyCommunities> {
                         children: [
                           Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(
-                              communityNames[index],
-                              style: const TextStyle(
-                                fontSize: 23,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            child: TextButton(
+                              onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const CommunityDetails(),));
+                              },
+                              child: Text(communityNames[index],
+                                style: const TextStyle(
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.bold,
+                                ),),
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -76,22 +78,23 @@ class _MyCommunitiesState extends State<MyCommunities> {
                             builder: (context, snapshot) {
                               if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                                 var requestStatus = snapshot.data!.docs[0].get('requestStatus');
-                                return Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Durum: ${requestStatus ?? "Hata"}',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: requestStatus == 'Beklemede' ? Colors.orange : Colors.black,
+                                if(requestStatus == true){
+                                  return Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Durum: ${requestStatus ?? "Hata"}',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: requestStatus == 'Beklemede' ? Colors.orange : Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                }
                               } else if (snapshot.hasError) {
                                 return Text('Hata: ${snapshot.error}');
-                              } else {
-                                return const SizedBox(); // Return an empty SizedBox when there are no documents
                               }
+                              return const SizedBox();
                             },
                           ),
                         ],
