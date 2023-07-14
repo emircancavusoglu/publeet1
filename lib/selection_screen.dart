@@ -4,7 +4,7 @@ import 'package:publeet1/find_community.dart';
 import 'package:publeet1/login_screen.dart';
 import 'package:publeet1/my_notifications.dart';
 import 'package:publeet1/utilities/google_sign_in.dart';
-import 'my_communities.dart';
+import 'package:publeet1/my_communities.dart';
 import 'communityWorld.dart';
 import 'add_community.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -124,7 +124,6 @@ class _SelectionScreenState extends State<SelectionScreen> {
                             builder: (context) => const MyCommunities(),
                           ),
                         );
-                        getData(FirebaseAuth.instance.currentUser!.email.toString());
                       },
                     ),
                   ),
@@ -136,7 +135,12 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 icon: Icons.notifications,
                 text: "İsteklerim",
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const MyNotifications(),));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MyNotifications(),
+                    ),
+                  );
                 },
                 width: 160,
               ),
@@ -206,7 +210,7 @@ class BubbleWidget extends StatelessWidget {
 
 Stream<List<String>> getData(String email) {
   return FirebaseFirestore.instance
-      .collection('users')
+      .collection('community_requests')
       .doc(email)
       .snapshots()
       .map((snapshot) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'community_details.dart';
+import 'package:publeet1/my_communities.dart';
 import 'login_screen.dart';
 
 class MyNotifications extends StatefulWidget {
@@ -58,55 +58,47 @@ class _MyNotificationsState extends State<MyNotifications> {
                   return Container(
                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 13),
                     child: ListTile(
-                      title: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const CommunityDetails()),
-                          );
-                        },
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                communityNames[index],
-                                style: const TextStyle(
-                                  fontSize: 23,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              communityNames[index],
+                              style: const TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 2),
-                            StreamBuilder<QuerySnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection('community_requests')
-                                  .where('communityName', isEqualTo: communityNames[index])
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  var requestStatus = snapshot.data!.docs[0].get('requestStatus');
-                                  return Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Durum: ${requestStatus ?? "Hata"}',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: requestStatus == 'Beklemede' ? Colors.orange : Colors.black,
-                                      ),
+                          ),
+                          const SizedBox(height: 2),
+                          StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('community_requests')
+                                .where('communityName', isEqualTo: communityNames[index])
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                var requestStatus = snapshot.data!.docs[0].get('requestStatus');
+                                return Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Durum: ${requestStatus ?? "Hata"}',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: requestStatus == 'Beklemede' ? Colors.orange : Colors.black,
                                     ),
-                                  );
-                                } else if (snapshot.hasError) {
-                                  return Text('Hata: ${snapshot.error}');
-                                } else {
-                                  return const CircularProgressIndicator();
-                                }
-                              },
-                            ),
-                          ],
-                        ),
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text('Hata: ${snapshot.error}');
+                              } else {
+                                return const CircularProgressIndicator();
+                              }
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   );
