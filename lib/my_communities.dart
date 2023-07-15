@@ -58,14 +58,21 @@ class _MyCommunitiesState extends State<MyCommunities> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: TextButton(
-                              onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const CommunityDetails(),));
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CommunityDetails(communityName: communityNames[index]),
+                                  ),
+                                );
                               },
-                              child: Text(communityNames[index],
+                              child: Text(
+                                communityNames[index],
                                 style: const TextStyle(
                                   fontSize: 23,
                                   fontWeight: FontWeight.bold,
-                                ),),
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -78,7 +85,7 @@ class _MyCommunitiesState extends State<MyCommunities> {
                             builder: (context, snapshot) {
                               if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                                 var requestStatus = snapshot.data!.docs[0].get('requestStatus');
-                                if(requestStatus == true){
+                                if (requestStatus == true) {
                                   return Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
@@ -121,6 +128,7 @@ class _MyCommunitiesState extends State<MyCommunities> {
     );
   }
 }
+
 
 class GetData {
   Stream<List<String>> getData(String email) {

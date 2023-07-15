@@ -20,7 +20,7 @@ class CommunityList extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CommunityDetails()),
+                MaterialPageRoute(builder: (context) =>  const CommunityDetails(communityName: '',)),
               );
             },
             child: FutureBuilder(
@@ -61,7 +61,7 @@ class CommunityList extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CommunityDetails()),
+                MaterialPageRoute(builder: (context) => const CommunityDetails(communityName: '',)),
               );
             },
             child: FutureBuilder(
@@ -102,7 +102,7 @@ class CommunityList extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CommunityDetails()),
+                MaterialPageRoute(builder: (context) => const  CommunityDetails(communityName: '',)),
               );
             },
             child: FutureBuilder(
@@ -151,8 +151,8 @@ class CommunityList extends StatelessWidget {
       return "";
     }
 
-    var randomDoc = snapshot.docs.elementAt(randomIndex); // Belirli bir indeksteki belgeye erişim
-    var communityName = randomDoc.get('communityName');
-    return communityName.toString();
+    var communityNames = snapshot.docs.map((doc) => doc.get('communityName').toString()).toList();
+    var communityName = communityNames[randomIndex];
+    return communityName;
   }
 }
