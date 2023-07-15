@@ -27,12 +27,12 @@ class _CommunityDetailsState extends State<CommunityDetails> {
             Navigator.pop(context);
           },
         ),
-        title: const Row(
+        title: Row(
           children: [
-            SizedBox(width: 26),
-            Text("Topluluklarım"),
-            SizedBox(width: 2),
-            Icon(Icons.group),
+            const SizedBox(width: 26),
+            Text("${widget.communityName} Detay"),
+            const SizedBox(width: 2),
+            const Icon(Icons.group),
           ],
         ),
       ),
@@ -45,10 +45,16 @@ class _CommunityDetailsState extends State<CommunityDetails> {
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
             List<String> descriptions = [];
+            List<double> latitudes = [];
+            List<double> longitudes = [];
 
             for (var doc in snapshot.data!.docs) {
               var description = doc.get('description');
+              var latitude = doc.get('latitude') as double;
+              var longitude = doc.get('longitude') as double;
               descriptions.add(description);
+              latitudes.add(latitude);
+              longitudes.add(longitude);
             }
 
             var requestStatus = snapshot.data!.docs[0].get('requestStatus');
@@ -78,9 +84,9 @@ class _CommunityDetailsState extends State<CommunityDetails> {
                         color: requestStatus == 'Beklemede' ? Colors.orange : Colors.black,
                       ),
                     ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Tanımlar:',
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Açıklama:',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -88,13 +94,38 @@ class _CommunityDetailsState extends State<CommunityDetails> {
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: descriptions.map((description) {
-                        return Text(
-                          description ?? 'Hata',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
+                      children: descriptions.asMap().entries.map((entry) {
+                        var index = entry.key;
+                        var description = entry.value;
+                        var latitude = latitudes[index].toStringAsFixed(6); // Convert double to string with 6 decimal places
+                        var longitude = longitudes[index].toStringAsFixed(6); // Convert double to string with 6 decimal places
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              description ?? 'Hata',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Latitude: $latitude',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              'Longitude: $longitude',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
                         );
                       }).toList(),
                     ),
