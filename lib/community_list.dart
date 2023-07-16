@@ -145,7 +145,7 @@ class CommunityList extends StatelessWidget {
   }
 
   Future<String> getRandomCommunityName(int randomIndex) async {
-    var collectionRef = FirebaseFirestore.instance.collection('community');
+    var collectionRef = FirebaseFirestore.instance.collection('community_requests');
     var snapshot = await collectionRef.get();
     if (snapshot.docs.isEmpty) {
       return "";

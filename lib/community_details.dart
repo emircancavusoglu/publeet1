@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'location/sign_location.dart';
 
 class CommunityDetails extends StatefulWidget {
   final String communityName;
@@ -16,6 +18,8 @@ class _CommunityDetailsState extends State<CommunityDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final locationProvider = Provider.of<LocationProvider>(context);
+    final userAddress = locationProvider.userAddress;
     User? currentUser = _auth.currentUser;
 
     return Scaffold(
@@ -125,6 +129,14 @@ class _CommunityDetailsState extends State<CommunityDetails> {
                               ),
                             ),
                             const SizedBox(height: 8),
+                            if (userAddress != null && userAddress.isNotEmpty)
+                              Text(
+                                "Adres: ${userAddress[0].thoroughfare ?? ''} ${userAddress[0].subThoroughfare ?? ''} ${userAddress[0].locality ?? ''} ${userAddress[0].administrativeArea ?? ''} ${userAddress[0].country ?? ''}",
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
                           ],
                         );
                       }).toList(),
