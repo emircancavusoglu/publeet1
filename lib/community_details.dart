@@ -140,7 +140,7 @@ class _CommunityDetailsState extends State<CommunityDetails> {
                               ),
                             const SizedBox(height: 8),
                             if (latitudes.isNotEmpty && longitudes.isNotEmpty)
-                              Container(
+                              SizedBox(
                                 height: 200,
                                 child: GoogleMap(
                                   initialCameraPosition: CameraPosition(

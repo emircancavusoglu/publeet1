@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:publeet1/request_community.dart';
 import 'package:publeet1/location/sign_location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,7 +15,6 @@ class AddCommunityForm extends StatefulWidget {
 class _AddCommunityFormState extends State<AddCommunityForm> {
   final _formKey = GlobalKey<FormState>();
   final communityNameController = TextEditingController();
-  final _emailController = TextEditingController();
   final _descriptionController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -23,7 +23,6 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
   @override
   void dispose() {
     communityNameController.dispose();
-    _emailController.dispose();
     _descriptionController.dispose();
     super.dispose();
   }
@@ -106,28 +105,40 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                             _isLoading = true;
                           });
 
-                          await FirebaseFirestore.instance.collection("community").doc(userEmail).set({
-                            "communityName": communityNameController.text,
-                          });
+                          final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
+                          if (userPosition != null) {
+                            await FirebaseFirestore.instance.collection("community").doc(userEmail).set({
+                              "communityName": communityNameController.text,
+                            });
 
-                          await FirebaseFirestore.instance.collection("community_requests").add({
-                            "communityName": communityNameController.text,
-                            "description": _descriptionController.text,
-                            "userEmail": userEmail,
-                            "latitude": KonumKayit.latitude,
-                            "longitude": KonumKayit.longitude,
-                            "requestStatus" : false,
-                          });
+                            await FirebaseFirestore.instance.collection("community_requests").add({
+                              "communityName": communityNameController.text,
+                              "description": _descriptionController.text,
+                              "userEmail": userEmail,
+                              "latitude": userPosition.latitude,
+                              "longitude": userPosition.longitude,
+                              "requestStatus": false,
+                            });
 
-                          setState(() {
-                            _isLoading = false;
-                          });
+                            setState(() {
+                              _isLoading = false;
+                            });
 
-                          final snackBar = ScaffoldMessenger.of(context);
-                          snackBar.showSnackBar(
-                            const SnackBar(content: Text("Bilgiler kaydedildi")),
-                          );
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity()));
+                            final snackBar = ScaffoldMessenger.of(context);
+                            snackBar.showSnackBar(
+                              const SnackBar(content: Text("Bilgiler kaydedildi")),
+                            );
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity()));
+                          } else {
+                            setState(() {
+                              _isLoading = false;
+                            });
+
+                            final snackBar = ScaffoldMessenger.of(context);
+                            snackBar.showSnackBar(
+                              const SnackBar(content: Text("Konum bilgisi eksik. Lütfen konum kaydını tamamlayın.")),
+                            );
+                          }
                         }
                       },
                       child: const Text("Kaydet"),

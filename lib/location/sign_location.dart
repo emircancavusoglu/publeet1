@@ -2,15 +2,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
+import 'package:publeet1/request_community.dart';
 
 void main() {
-  runApp(const KonumKayit());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => LocationProvider(),
+      child: const KonumKayit(),
+    ),
+  );
 }
 
 class KonumKayit extends StatefulWidget {
   static double? latitude;
   static double? longitude;
-
   const KonumKayit({Key? key}) : super(key: key);
 
   @override
@@ -19,8 +25,62 @@ class KonumKayit extends StatefulWidget {
 
 class _KonumKayitState extends State<KonumKayit> {
   @override
+  void initState() {
+    super.initState();
+    _getUserLocation();
+  }
+
+  Future<void> _getUserLocation() async {
+    LocationProvider locationProvider = Provider.of<LocationProvider>(context, listen: false);
+    await locationProvider.requestUserLocation();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    throw UnimplementedError();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.deepPurple,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
+      ),
+      body: Center(
+        child: Consumer<LocationProvider>(
+          builder: (context, locationProvider, _) {
+            if (locationProvider.showDialog) {
+              return AlertDialog(
+                title: const Text('Adres Bilgisi'),
+                content: locationProvider.userAddress != null && locationProvider.userAddress!.isNotEmpty
+                    ? Text('Adresiniz: ${locationProvider.userAddress![0]}')
+                    : const Text('Adres bilgisi bulunamadı.'),
+                actions: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    onPressed: () {
+                      locationProvider.toggleShowDialog();
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Reddet'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      locationProvider.toggleShowDialog();
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Onaylıyorum'),
+                  ),
+                ],
+              );
+            } else {
+              return const CircularProgressIndicator(color: Colors.deepPurple);
+            }
+          },
+        ),
+      ),
+    );
   }
 }
 
@@ -36,33 +96,23 @@ class LocationProvider extends ChangeNotifier {
   Exception? get exception => _exception;
   bool get showDialog => _showDialog;
 
-  LocationProvider() {
-    _gps.startPositionStream(_handlePositionStream).catchError((e) {
-      _exception = e as Exception?;
-      _showDialog = true;
-      notifyListeners();
-    });
-  }
-
-  void _handlePositionStream(Position position) async {
-    _userPosition = position;
-    notifyListeners();
-
+  Future<void> requestUserLocation() async {
     try {
+      final Position position = await _gps.getUserLocation();
+      _userPosition = position;
       final List<Placemark> placemarks = await placemarkFromCoordinates(
-        _userPosition!.latitude,
-        _userPosition!.longitude,
+        position.latitude,
+        position.longitude,
       );
       if (placemarks.isNotEmpty) {
         _userAddress = placemarks;
         _showDialog = true;
-        notifyListeners();
       }
     } catch (e) {
       _exception = e as Exception?;
       _showDialog = true;
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   void toggleShowDialog() {
@@ -90,8 +140,15 @@ class Gps {
   }
 
   bool isAccessGranted(LocationPermission permission) {
-    return permission == LocationPermission.whileInUse ||
-        permission == LocationPermission.always;
+    return permission == LocationPermission.whileInUse || permission == LocationPermission.always;
+  }
+
+  Future<Position> getUserLocation() async {
+    bool permissionGranted = await requestPermission();
+    if (!permissionGranted) {
+      throw Exception("Kullanıcı GPS iznini vermedi.");
+    }
+    return Geolocator.getCurrentPosition();
   }
 
   Future<void> startPositionStream(Function(Position position) callback) async {
