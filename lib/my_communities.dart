@@ -83,7 +83,8 @@ class _MyCommunitiesState extends State<MyCommunities> {
                                 .where('requestStatus', isEqualTo: true)
                                 .snapshots(),
                             builder: (context, snapshot) {
-                              if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                              if (snapshot.hasData && snapshot.data!.docs.isNotEmpty)
+                                {
                                 var requestStatus = snapshot.data!.docs[0].get('requestStatus');
                                 if (requestStatus == true) {
                                   return Align(
@@ -135,6 +136,7 @@ class GetData {
     return FirebaseFirestore.instance
         .collection('community_requests')
         .where('userEmail', isEqualTo: email)
+        .where('requestStatus', isEqualTo: true)
         .snapshots()
         .map((snapshot) {
       List<String> communityNames = [];
