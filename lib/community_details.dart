@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'location/sign_location.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CommunityDetails extends StatefulWidget {
   final String communityName;
@@ -135,6 +136,23 @@ class _CommunityDetailsState extends State<CommunityDetails> {
                                 style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.black,
+                                ),
+                              ),
+                            const SizedBox(height: 8),
+                            if (latitudes.isNotEmpty && longitudes.isNotEmpty)
+                              Container(
+                                height: 200,
+                                child: GoogleMap(
+                                  initialCameraPosition: CameraPosition(
+                                    target: LatLng(latitudes[0], longitudes[0]),
+                                    zoom: 15,
+                                  ),
+                                  markers: {
+                                    Marker(
+                                      markerId: MarkerId(widget.communityName),
+                                      position: LatLng(latitudes[0], longitudes[0]),
+                                    ),
+                                  },
                                 ),
                               ),
                           ],
