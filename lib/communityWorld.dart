@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'location/locations.dart' as locations;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CommunityScreen extends StatefulWidget {
@@ -13,45 +12,25 @@ class CommunityScreen extends StatefulWidget {
 class _CommunityScreenState extends State<CommunityScreen> {
   final Map<String, Marker> _markers = {};
 
-  Future<void> _onMapCreated(GoogleMapController controller) async {
-    final googleOffices = await locations.getGoogleOffices();
-    setState(() {
-      _markers.clear();
-      for (final office in googleOffices.offices) {
-        final marker = Marker(
-          markerId: MarkerId(office.name),
-          position: LatLng(office.lat, office.lng),
-          infoWindow: InfoWindow(
-            title: office.name,
-            snippet: office.address,
-          ),
-        );
-        _markers[office.name] = marker;
-      }
-    });
-  }
-
   Future<void> _addCommunityMarkers() async {
-    // Firestore'dan community_requests koleksiyonundan requestStatus değeri true olan toplulukları almak
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('community_requests')
         .where('requestStatus', isEqualTo: true)
         .get();
 
-    // snapshot'taki toplulukların konum bilgilerini kullanarak haritada işaretleme yapmak
     setState(() {
       _markers.clear();
       for (var doc in snapshot.docs) {
         var communityName = doc['communityName'];
-        var communityLat = doc['latitude']; // Topluluğun enlem değeri
-        var communityLng = doc['longitude']; // Topluluğun boylam değeri
+        var communityLat = doc['latitude'];
+        var communityLng = doc['longitude'];
 
         final marker = Marker(
           markerId: MarkerId(communityName),
           position: LatLng(communityLat, communityLng),
           infoWindow: InfoWindow(
             title: communityName,
-            snippet: doc['communityAddress'], // Topluluğun adres bilgisi
+            snippet: doc['communityAddress'],
           ),
         );
         _markers[communityName] = marker;
@@ -86,7 +65,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
           elevation: 2,
         ),
         body: GoogleMap(
-          onMapCreated: _onMapCreated,
+          onMapCreated: (controller) => _onMapCreated(controller),
           initialCameraPosition: const CameraPosition(
             target: LatLng(0, 0),
             zoom: 2,
@@ -95,5 +74,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
         ),
       ),
     );
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    // Harita oluşturulduğunda işlem yapmak için boş bir fonksiyon
+    // Bu fonksiyon olmadan da işaretlemeler çalışacaktır.
   }
 }

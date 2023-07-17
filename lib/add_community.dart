@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:provider/provider.dart';
 import 'package:publeet1/request_community.dart';
 import 'package:publeet1/location/sign_location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'find_community.dart';
 
 class AddCommunityForm extends StatefulWidget {
   const AddCommunityForm({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class AddCommunityForm extends StatefulWidget {
 }
 
 class _AddCommunityFormState extends State<AddCommunityForm> {
+  String? _currentAddress;
   final _formKey = GlobalKey<FormState>();
   final communityNameController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -107,6 +110,16 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
 
                           final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
                           if (userPosition != null) {
+                            // Adres bilgisini almak için kodları burada tekrarlayın
+                            final List<Placemark> placemarks = await placemarkFromCoordinates(
+                              userPosition.latitude,
+                              userPosition.longitude,
+                            );
+                            if (placemarks.isNotEmpty) {
+                              Placemark place = placemarks[0];
+                              _currentAddress = '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
+                            }
+
                             await FirebaseFirestore.instance.collection("community").doc(userEmail).set({
                               "communityName": communityNameController.text,
                             });
@@ -117,6 +130,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                               "userEmail": userEmail,
                               "latitude": userPosition.latitude,
                               "longitude": userPosition.longitude,
+                              "communityAddress": _currentAddress,
                               "requestStatus": false,
                             });
 
