@@ -40,8 +40,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _addCommunityMarkers();
   }
 
@@ -51,7 +51,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
       color: Colors.pinkAccent,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorSchemeSeed: Colors.green[700],
+        colorSchemeSeed: Colors.blue[700],
       ),
       home: Scaffold(
         appBar: AppBar(
