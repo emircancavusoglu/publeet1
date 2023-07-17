@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CommunityScreen extends StatefulWidget {
-  const CommunityScreen({super.key});
+  const CommunityScreen({Key? key}) : super(key: key);
 
   @override
   State<CommunityScreen> createState() => _CommunityScreenState();
@@ -24,13 +24,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
         var communityName = doc['communityName'];
         var communityLat = doc['latitude'];
         var communityLng = doc['longitude'];
+        var communityAddress = doc['communityAddress'];
 
         final marker = Marker(
           markerId: MarkerId(communityName),
           position: LatLng(communityLat, communityLng),
           infoWindow: InfoWindow(
             title: communityName,
-            snippet: doc['communityAddress'],
+            snippet: communityAddress,
           ),
         );
         _markers[communityName] = marker;
@@ -50,7 +51,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
       color: Colors.pinkAccent,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        useMaterial3: true,
         colorSchemeSeed: Colors.green[700],
       ),
       home: Scaffold(
@@ -78,6 +78,5 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   void _onMapCreated(GoogleMapController controller) {
     // Harita oluşturulduğunda işlem yapmak için boş bir fonksiyon
-    // Bu fonksiyon olmadan da işaretlemeler çalışacaktır.
   }
 }
