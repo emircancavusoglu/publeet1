@@ -5,7 +5,6 @@ import 'package:publeet1/request_community.dart';
 import 'package:publeet1/location/sign_location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'find_community.dart';
 
 class AddCommunityForm extends StatefulWidget {
   const AddCommunityForm({Key? key}) : super(key: key);
@@ -166,7 +165,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                         } else {
                           final snackBar = ScaffoldMessenger.of(context);
                           snackBar.showSnackBar(
-                            const SnackBar(content: Text("Konum eklemeniz gerekiyor.")),
+                            const SnackBar(content: Text("Lütfen konum ekleme ikonuna basınız.")),
                           );
                         }
                       },
