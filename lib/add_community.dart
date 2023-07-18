@@ -5,7 +5,6 @@ import 'package:publeet1/request_community.dart';
 import 'package:publeet1/location/sign_location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'find_community.dart';
 
 class AddCommunityForm extends StatefulWidget {
   const AddCommunityForm({Key? key}) : super(key: key);
@@ -22,6 +21,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool _isLoading = false;
+  bool _isLocationApproved = false;
 
   @override
   void dispose() {
@@ -87,12 +87,36 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                         return null;
                       },
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Checkbox(
+                          value: _isLocationApproved,
+                          onChanged: (value) {
+                            setState(() {
+                              _isLocationApproved = value!;
+                            });
+                          },
+                        ),
+                        const Expanded(
+                            child: Text("Konumumum Otomatik Olarak Alınmasını Onaylıyorum")),
+                      ],
+                    ),
                     const SizedBox(height: 22),
                     ElevatedButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.deepPurple)),
                       onPressed: () async {
                         final currentUser = _auth.currentUser;
                         final userEmail = currentUser?.email ?? '';
+
+                        // Eklendi: Konum onayı kontrolü
+                        if (!_isLocationApproved) {
+                          final snackBar = ScaffoldMessenger.of(context);
+                          snackBar.showSnackBar(
+                            const SnackBar(content: Text("Konum onayını vermeden kayıt işlemi yapılamaz.")),
+                          );
+                          return; // İşlemi durdur
+                        }
 
                         if (_formKey.currentState!.validate()) {
                           setState(() {

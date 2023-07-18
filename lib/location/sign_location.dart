@@ -37,7 +37,6 @@ class _KonumKayitState extends State<KonumKayit> {
 
   @override
   Widget build(BuildContext context) {
-    bool isLocationAdded = false;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
@@ -69,7 +68,6 @@ class _KonumKayitState extends State<KonumKayit> {
                   ElevatedButton(
                     onPressed: () {
                       locationProvider.toggleShowDialog();
-                      isLocationAdded = true;
                       Navigator.pop(context);
                     },
                     child: const Text('Onaylıyorum'),
