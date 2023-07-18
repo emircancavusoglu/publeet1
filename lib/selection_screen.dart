@@ -106,7 +106,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const CommunityScreen(),
+                            builder: (context) => const CommunityWorld(),
                           ),
                         );
                       },

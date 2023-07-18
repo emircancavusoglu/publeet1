@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:publeet1/community_details.dart';
 
 class MyCommunities extends StatefulWidget {
   const MyCommunities({Key? key}) : super(key: key);
@@ -10,97 +11,125 @@ class MyCommunities extends StatefulWidget {
 }
 
 class _MyCommunitiesState extends State<MyCommunities> {
-  final Map<MarkerId, Marker> _markers = {};
-
-  Future<void> _addCommunityMarkers() async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('community_requests')
-        .where('requestStatus', isEqualTo: true)
-        .get();
-
-    setState(() {
-      _markers.clear();
-      var communityCoordinatesMap = <String, LatLng>{};
-      for (var doc in snapshot.docs) {
-        var communityName = doc['communityName'];
-        var communityLat = doc['latitude'];
-        var communityLng = doc['longitude'];
-        var communityAddress = doc['communityAddress'];
-        var communityDocumentId = doc.id;
-
-        var adjustedCoordinates = _getAdjustedCoordinates(communityCoordinatesMap, communityLat, communityLng);
-
-        String markerIdValue = '$communityName-${adjustedCoordinates.latitude}-${adjustedCoordinates.longitude}-$communityDocumentId';
-        final markerId = MarkerId(markerIdValue);
-
-        final marker = Marker(
-          markerId: markerId,
-          position: adjustedCoordinates,
-          infoWindow: InfoWindow(
-            title: communityName,
-            snippet: communityAddress,
-          ),
-        );
-        _markers[markerId] = marker;
-        communityCoordinatesMap[communityName] = adjustedCoordinates;
-      }
-    });
-  }
-
-  LatLng _getAdjustedCoordinates(Map<String, LatLng> coordinatesMap, double lat, double lng) {
-    const double increment = 0.0001;
-    int attempt = 0;
-    String key = '$lat-$lng';
-    while (coordinatesMap.containsKey(key)) {
-      double newLat = lat + (increment * attempt);
-      double newLng = lng + (increment * attempt);
-      key = '$newLat-$newLng';
-      attempt++;
-    }
-    return LatLng(lat + (increment * attempt), lng + (increment * attempt));
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _addCommunityMarkers();
-  }
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  GetData data = GetData();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      color: Colors.pinkAccent,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorSchemeSeed: Colors.blue[700],
+    User? currentUser = _auth.currentUser;
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.deepPurple,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Row(
+          children: [
+            SizedBox(
+              width: 26,
+            ),
+            Text("Topluluklarım"),
+            SizedBox(
+              width: 2,
+            ),
+            Icon(Icons.group),
+          ],
+        ),
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: const Text('Dünyadaki Topluluklar'),
-          elevation: 2,
-        ),
-        body: GoogleMap(
-          onMapCreated: (controller) => _onMapCreated(controller),
-          initialCameraPosition: const CameraPosition(
-            target: LatLng(0, 0),
-            zoom: 2,
-          ),
-          markers: _markers.values.toSet(),
-        ),
+      body: StreamBuilder<List<String>>(
+        stream: data.getData(currentUser!.email.toString()),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<String>? communityNames = snapshot.data;
+            if (communityNames != null && communityNames.isNotEmpty) {
+              return ListView.builder(
+                itemCount: communityNames.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 13),
+                    child: ListTile(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CommunityDetails(communityName: communityNames[index]),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                communityNames[index],
+                                style: const TextStyle(
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('community_requests')
+                                .where('communityName', isEqualTo: communityNames[index])
+                                .where('requestStatus', isEqualTo: true)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData && snapshot.data!.docs.isNotEmpty)
+                                {
+                                var requestStatus = snapshot.data!.docs[0].get('requestStatus');
+                                if (requestStatus == true) {
+                                  return Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Durum: ${requestStatus ?? "Hata"}',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: requestStatus == 'Beklemede' ? Colors.orange : Colors.black,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              } else if (snapshot.hasError) {
+                                return Text('Hata: ${snapshot.error}');
+                              }
+                              return const SizedBox();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else {
+              return const Center(
+                child: Text(
+                  'Topluluk bulunamadı.',
+                  style: TextStyle(fontSize: 18),
+                ),
+              );
+            }
+          } else if (snapshot.hasError) {
+            return Text('Hata: ${snapshot.error}');
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }
-
-  void _onMapCreated(GoogleMapController controller) {
-    // Harita oluşturulduğunda işlem yapmak için boş bir fonksiyon
-  }
 }
+
 
 class GetData {
   Stream<List<String>> getData(String email) {
