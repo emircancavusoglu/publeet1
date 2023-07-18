@@ -130,7 +130,6 @@ class _MyCommunitiesState extends State<MyCommunities> {
   }
 }
 
-
 class GetData {
   Stream<List<String>> getData(String email) {
     return FirebaseFirestore.instance

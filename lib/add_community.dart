@@ -22,6 +22,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool _isLoading = false;
+  bool _isLocationAdded = false;
 
   @override
   void dispose() {
@@ -88,11 +89,19 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                       },
                     ),
                     IconButton(
-                      onPressed: () {
+                      onPressed: _isLocationAdded
+                          ? null
+                          : () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const KonumKayit()),
-                        );
+                        ).then((result) {
+                          if (result == true) {
+                            setState(() {
+                              _isLocationAdded = true;
+                            });
+                          }
+                        });
                       },
                       icon: const Icon(Icons.add_location_alt),
                     ),
@@ -103,56 +112,62 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                         final currentUser = _auth.currentUser;
                         final userEmail = currentUser?.email ?? '';
 
-                        if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            _isLoading = true;
-                          });
+                        if (_isLocationAdded) {
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              _isLoading = true;
+                            });
 
-                          final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
-                          if (userPosition != null) {
-                            // Adres bilgisini almak için kodları burada tekrarlayın
-                            final List<Placemark> placemarks = await placemarkFromCoordinates(
-                              userPosition.latitude,
-                              userPosition.longitude,
-                            );
-                            if (placemarks.isNotEmpty) {
-                              Placemark place = placemarks[0];
-                              _currentAddress = '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
+                            final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
+                            if (userPosition != null) {
+                              final List<Placemark> placemarks = await placemarkFromCoordinates(
+                                userPosition.latitude,
+                                userPosition.longitude,
+                              );
+                              if (placemarks.isNotEmpty) {
+                                Placemark place = placemarks[0];
+                                _currentAddress = '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
+                              }
+
+                              await FirebaseFirestore.instance.collection("community").doc(userEmail).set({
+                                "communityName": communityNameController.text,
+                              });
+
+                              await FirebaseFirestore.instance.collection("community_requests").add({
+                                "communityName": communityNameController.text,
+                                "description": _descriptionController.text,
+                                "userEmail": userEmail,
+                                "latitude": userPosition.latitude,
+                                "longitude": userPosition.longitude,
+                                "communityAddress": _currentAddress,
+                                "requestStatus": false,
+                              });
+
+                              setState(() {
+                                _isLoading = false;
+                              });
+
+                              final snackBar = ScaffoldMessenger.of(context);
+                              snackBar.showSnackBar(
+                                const SnackBar(content: Text("Bilgiler kaydedildi")),
+                              );
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity()));
+                            } else {
+                              setState(() {
+                                _isLoading = false;
+                              });
+
+                              final snackBar = ScaffoldMessenger.of(context);
+                              snackBar.showSnackBar(
+                                const SnackBar(content: Text("Konum bilgisi eksik. Lütfen konum kaydını tamamlayın.")),
+                              );
                             }
-
-                            await FirebaseFirestore.instance.collection("community").doc(userEmail).set({
-                              "communityName": communityNameController.text,
-                            });
-
-                            await FirebaseFirestore.instance.collection("community_requests").add({
-                              "communityName": communityNameController.text,
-                              "description": _descriptionController.text,
-                              "userEmail": userEmail,
-                              "latitude": userPosition.latitude,
-                              "longitude": userPosition.longitude,
-                              "communityAddress": _currentAddress,
-                              "requestStatus": false,
-                            });
-
-                            setState(() {
-                              _isLoading = false;
-                            });
-
-                            final snackBar = ScaffoldMessenger.of(context);
-                            snackBar.showSnackBar(
-                              const SnackBar(content: Text("Bilgiler kaydedildi")),
-                            );
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity()));
-                          } else {
-                            setState(() {
-                              _isLoading = false;
-                            });
-
-                            final snackBar = ScaffoldMessenger.of(context);
-                            snackBar.showSnackBar(
-                              const SnackBar(content: Text("Konum bilgisi eksik. Lütfen konum kaydını tamamlayın.")),
-                            );
                           }
+                        } else {
+                          final snackBar = ScaffoldMessenger.of(context);
+                          snackBar.showSnackBar(
+                            const SnackBar(content: Text("Konum eklemeniz gerekiyor.")),
+                          );
                         }
                       },
                       child: const Text("Kaydet"),
