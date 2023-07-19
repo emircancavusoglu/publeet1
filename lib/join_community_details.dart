@@ -161,19 +161,34 @@ class _JoinCommunityDetailsState extends State<JoinCommunityDetails> {
                               ),
                             const SizedBox(height: 40,),
                             Center(
-                                child: ElevatedButton(
-                                    onPressed: () async {
-                                      final userEmail = currentUser.email;
-                                      final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
-                                      await FirebaseFirestore.instance.collection("communities").add({
-                                        "communityName": communityNameController.text,
-                                        "description": _descriptionController.text,
-                                        "communityAddress": _currentAddress,
-                                        "members": currentUser.uid,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  final userEmail = currentUser!.email;
+                                  final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
+                                  await FirebaseFirestore.instance.collection("communities").add({
+                                    "communityName": widget.communityName,
+                                    "description": _descriptionController.text,
+                                    "communityAddress": _currentAddress,
+                                  });
+
+                                  // Eğer users belgesi varsa, katıldığı toplulukları diziye ekleyin, yoksa yeni bir belge oluşturun
+                                  DocumentReference userDocRef = FirebaseFirestore.instance.collection("users").doc(currentUser!.uid);
+                                  userDocRef.get().then((docSnapshot) async {
+                                    if (docSnapshot.exists) {
+                                      await userDocRef.update({
+                                        "joinedCommunities": FieldValue.arrayUnion([widget.communityName]),
                                       });
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) =>const RequestSent(),));
-                                    },
-                                    child: const Text("Topluluğa Katıl"))
+                                    } else {
+                                      await userDocRef.set({
+                                        "joinedCommunities": [widget.communityName],
+                                      });
+                                    }
+                                  });
+
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) =>const RequestSent(),));
+                                },
+                                child: const Text("Topluluğa Katıl"),
+                              ),
                             )
                           ],
                         );
