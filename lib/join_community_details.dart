@@ -165,15 +165,11 @@ class _JoinCommunityDetailsState extends State<JoinCommunityDetails> {
                                     onPressed: () async {
                                       final userEmail = currentUser.email;
                                       final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
-
-                                      await FirebaseFirestore.instance.collection("community_requests").add({
+                                      await FirebaseFirestore.instance.collection("communities").add({
                                         "communityName": communityNameController.text,
                                         "description": _descriptionController.text,
-                                        "userEmail": userEmail,
-                                        "latitude": userPosition?.latitude,
-                                        "longitude": userPosition?.longitude,
                                         "communityAddress": _currentAddress,
-                                        "requestStatus": false,
+                                        "members": currentUser.uid,
                                       });
                                       Navigator.push(context, MaterialPageRoute(builder: (context) =>const RequestSent(),));
                                     },
