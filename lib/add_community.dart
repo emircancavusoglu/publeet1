@@ -21,7 +21,6 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool _isLoading = false;
-  bool _isLocationApproved = false;
 
   @override
   void dispose() {
@@ -48,7 +47,6 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 32),
                     const Align(
                       alignment: Alignment.topCenter,
                       child: Icon(
@@ -87,42 +85,28 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                         return null;
                       },
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Checkbox(
-                          value: _isLocationApproved,
-                          onChanged: (value) {
-                            setState(() {
-                              _isLocationApproved = value!;
-                            });
-                          },
-                        ),
-                        const Expanded(
-                            child: Text("Konumumum Otomatik Olarak Alınmasını Onaylıyorum")),
-                      ],
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const KonumKayit()),
+                        );
+                      },
+                      icon: const Icon(Icons.add_location_alt),
                     ),
-                    const SizedBox(height: 22),
+                    const SizedBox(height: 32),
                     ElevatedButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.deepPurple)),
                       onPressed: () async {
                         final currentUser = _auth.currentUser;
                         final userEmail = currentUser?.email ?? '';
 
-                        // Eklendi: Konum onayı kontrolü
-                        if (!_isLocationApproved) {
-                          final snackBar = ScaffoldMessenger.of(context);
-                          snackBar.showSnackBar(
-                            const SnackBar(content: Text("Konum onayını vermeden kayıt işlemi yapılamaz.")),
-                          );
-                          return; // İşlemi durdur
-                        }
+                        // Burada "_isLoading" değişkenini "true" olarak değiştirerek kayıt işleminin başlamasını sağlıyoruz.
+                        setState(() {
+                          _isLoading = true;
+                        });
 
                         if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            _isLoading = true;
-                          });
-
                           final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
                           if (userPosition != null) {
                             final List<Placemark> placemarks = await placemarkFromCoordinates(
@@ -149,29 +133,19 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                             });
 
                             setState(() {
-                              _isLoading = false;
+                              _isLoading = false; // Kayıt işlemi tamamlandığında "_isLoading" değişkenini tekrar "false" olarak değiştiriyoruz.
                             });
-
                             final snackBar = ScaffoldMessenger.of(context);
                             snackBar.showSnackBar(
                               const SnackBar(content: Text("Bilgiler kaydedildi")),
                             );
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity()));
-                          } else {
-                            setState(() {
-                              _isLoading = false;
-                            });
-
-                            final snackBar = ScaffoldMessenger.of(context);
-                            snackBar.showSnackBar(
-                              const SnackBar(content: Text("Konum bilgisi eksik. Lütfen konum kaydını tamamlayın.")),
-                            );
                           }
                         }
                       },
                       child: const Text("Kaydet"),
                     ),
-                    const SizedBox(height: 16),
+
                   ],
                 ),
               ),

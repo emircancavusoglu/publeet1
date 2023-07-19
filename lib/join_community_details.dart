@@ -160,6 +160,7 @@ class _JoinCommunityDetailsState extends State<JoinCommunityDetails> {
                             Center(
                                 child: ElevatedButton(
                                     onPressed: (){
+
                                       Navigator.push(context, MaterialPageRoute(builder: (context) =>const RequestSent(),));
                                     },
                                     child: const Text("Topluluğa Katıl"))
