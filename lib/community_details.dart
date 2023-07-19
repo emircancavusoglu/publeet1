@@ -155,6 +155,13 @@ class _CommunityDetailsState extends State<CommunityDetails> {
                                   },
                                 ),
                               ),
+                            const SizedBox(height: 40,),
+                            Center(
+                                child: ElevatedButton(
+                                    onPressed: (){
+
+                                    }, child: const Text("Topluluğa Katıl"))
+                            )
                           ],
                         );
                       }).toList(),
