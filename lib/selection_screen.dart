@@ -25,7 +25,6 @@ class _SelectionScreenState extends State<SelectionScreen> {
       MaterialPageRoute(builder: (context) => const LoginScreen()),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

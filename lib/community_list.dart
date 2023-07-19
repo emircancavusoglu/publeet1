@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:publeet1/community_details.dart';
+import 'package:publeet1/join_community_details.dart';
 import 'dart:math' as math;
 
 import 'my_communities.dart';
@@ -101,7 +102,7 @@ class _CommunityListState extends State<CommunityList> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CommunityDetails(communityName: communityName),
+                          builder: (context) => JoinCommunityDetails(communityName: communityName),
                         ),
                       );
                     },

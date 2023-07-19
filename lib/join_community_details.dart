@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:publeet1/request_sent.dart';
 import 'location/sign_location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class CommunityDetails extends StatefulWidget {
+class JoinCommunityDetails extends StatefulWidget {
   final String communityName;
 
-  const CommunityDetails({Key? key, required this.communityName}) : super(key: key);
+  const JoinCommunityDetails({Key? key, required this.communityName}) : super(key: key);
 
   @override
-  _CommunityDetailsState createState() => _CommunityDetailsState();
+  _JoinCommunityDetailsState createState() => _JoinCommunityDetailsState();
 }
 
-class _CommunityDetailsState extends State<CommunityDetails> {
+class _JoinCommunityDetailsState extends State<JoinCommunityDetails> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
@@ -155,6 +156,14 @@ class _CommunityDetailsState extends State<CommunityDetails> {
                                   },
                                 ),
                               ),
+                            const SizedBox(height: 40,),
+                            Center(
+                                child: ElevatedButton(
+                                    onPressed: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) =>const RequestSent(),));
+                                    },
+                                    child: const Text("Topluluğa Katıl"))
+                            )
                           ],
                         );
                       }).toList(),
