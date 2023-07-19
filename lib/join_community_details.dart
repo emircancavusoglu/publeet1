@@ -16,6 +16,9 @@ class JoinCommunityDetails extends StatefulWidget {
 }
 
 class _JoinCommunityDetailsState extends State<JoinCommunityDetails> {
+  String? _currentAddress;
+  final communityNameController = TextEditingController();
+  final _descriptionController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
@@ -109,7 +112,7 @@ class _JoinCommunityDetailsState extends State<JoinCommunityDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              description ?? 'Hata',
+                              description,
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
@@ -159,8 +162,19 @@ class _JoinCommunityDetailsState extends State<JoinCommunityDetails> {
                             const SizedBox(height: 40,),
                             Center(
                                 child: ElevatedButton(
-                                    onPressed: (){
+                                    onPressed: () async {
+                                      final userEmail = currentUser.email;
+                                      final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
 
+                                      await FirebaseFirestore.instance.collection("community_requests").add({
+                                        "communityName": communityNameController.text,
+                                        "description": _descriptionController.text,
+                                        "userEmail": userEmail,
+                                        "latitude": userPosition?.latitude,
+                                        "longitude": userPosition?.longitude,
+                                        "communityAddress": _currentAddress,
+                                        "requestStatus": false,
+                                      });
                                       Navigator.push(context, MaterialPageRoute(builder: (context) =>const RequestSent(),));
                                     },
                                     child: const Text("Topluluğa Katıl"))

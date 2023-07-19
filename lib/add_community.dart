@@ -105,7 +105,6 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                         setState(() {
                           _isLoading = true;
                         });
-
                         if (_formKey.currentState!.validate()) {
                           final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
                           if (userPosition != null) {
@@ -117,11 +116,9 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                               Placemark place = placemarks[0];
                               _currentAddress = '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
                             }
-
                             await FirebaseFirestore.instance.collection("community").doc(userEmail).set({
                               "communityName": communityNameController.text,
                             });
-
                             await FirebaseFirestore.instance.collection("community_requests").add({
                               "communityName": communityNameController.text,
                               "description": _descriptionController.text,
@@ -131,7 +128,6 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                               "communityAddress": _currentAddress,
                               "requestStatus": false,
                             });
-
                             setState(() {
                               _isLoading = false; // Kayıt işlemi tamamlandığında "_isLoading" değişkenini tekrar "false" olarak değiştiriyoruz.
                             });
@@ -145,7 +141,6 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                       },
                       child: const Text("Kaydet"),
                     ),
-
                   ],
                 ),
               ),
