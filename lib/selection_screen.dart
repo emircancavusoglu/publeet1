@@ -25,8 +25,12 @@ class _SelectionScreenState extends State<SelectionScreen> {
       MaterialPageRoute(builder: (context) => const LoginScreen()),
     );
   }
+
   @override
   Widget build(BuildContext context) {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+    Stream<List<String>> userCommunitiesStream = getData(currentUser?.uid ?? '');
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -35,9 +39,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
-              const Column(
+              Column(
                 children: [
-                  Text(
+                  const Text(
                     "Kayıtlı Olduğun Topluluklar:",
                     style: TextStyle(
                       color: Colors.deepPurple,
@@ -47,14 +51,32 @@ class _SelectionScreenState extends State<SelectionScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  Text(
-                    "",
-                    style: TextStyle(
-                      color: Colors.deepPurple,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
+                  StreamBuilder<List<String>>(
+                    stream: userCommunitiesStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final List<String> userCommunities = snapshot.data ?? [];
+                        return Text(
+                          userCommunities.join(', '), // Toplulukları virgülle ayrılmış bir şekilde göster
+                          style: const TextStyle(
+                            color: Colors.deepPurple,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        );
+                      } else {
+                        return const Text(
+                          'Topluluklar Yükleniyor...',
+                          style: TextStyle(
+                            color: Colors.deepPurple,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
@@ -206,18 +228,19 @@ class BubbleWidget extends StatelessWidget {
     );
   }
 }
-
-Stream<List<String>> getData(String email) {
+// getData fonksiyonu kullanıcının email adresini alarak kullanıcının katıldığı toplulukları döndürür.
+Stream<List<String>> getData(String id) {
   return FirebaseFirestore.instance
-      .collection('community_requests')
-      .doc(email)
+      .collection('users')
+      .doc(id)
       .snapshots()
       .map((snapshot) {
     if (snapshot.exists) {
-      var communityName = snapshot['communityName'];
-      return List<String>.from(communityName ?? []);
+      var communityNames = snapshot['joinedCommunities'];
+      return List<String>.from(communityNames ?? []);
     } else {
       return [];
     }
   });
 }
+

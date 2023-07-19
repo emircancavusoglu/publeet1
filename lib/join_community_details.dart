@@ -14,7 +14,6 @@ class JoinCommunityDetails extends StatefulWidget {
   @override
   _JoinCommunityDetailsState createState() => _JoinCommunityDetailsState();
 }
-
 class _JoinCommunityDetailsState extends State<JoinCommunityDetails> {
   String? _currentAddress;
   final communityNameController = TextEditingController();
@@ -26,7 +25,6 @@ class _JoinCommunityDetailsState extends State<JoinCommunityDetails> {
     final locationProvider = Provider.of<LocationProvider>(context);
     final userAddress = locationProvider.userAddress;
     User? currentUser = _auth.currentUser;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
@@ -65,9 +63,7 @@ class _JoinCommunityDetailsState extends State<JoinCommunityDetails> {
               latitudes.add(latitude);
               longitudes.add(longitude);
             }
-
             var requestStatus = snapshot.data!.docs[0].get('requestStatus');
-
             if (requestStatus == true) {
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 13),
@@ -170,7 +166,6 @@ class _JoinCommunityDetailsState extends State<JoinCommunityDetails> {
                                     "description": _descriptionController.text,
                                     "communityAddress": _currentAddress,
                                   });
-
                                   // Eğer users belgesi varsa, katıldığı toplulukları diziye ekleyin, yoksa yeni bir belge oluşturun
                                   DocumentReference userDocRef = FirebaseFirestore.instance.collection("users").doc(currentUser!.uid);
                                   userDocRef.get().then((docSnapshot) async {
@@ -184,7 +179,6 @@ class _JoinCommunityDetailsState extends State<JoinCommunityDetails> {
                                       });
                                     }
                                   });
-
                                   Navigator.push(context, MaterialPageRoute(builder: (context) =>const RequestSent(),));
                                 },
                                 child: const Text("Topluluğa Katıl"),
