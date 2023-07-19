@@ -83,8 +83,7 @@ class _MyCommunitiesState extends State<MyCommunities> {
                                 .where('requestStatus', isEqualTo: true)
                                 .snapshots(),
                             builder: (context, snapshot) {
-                              if (snapshot.hasData && snapshot.data!.docs.isNotEmpty)
-                                {
+                              if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                                 var requestStatus = snapshot.data!.docs[0].get('requestStatus');
                                 if (requestStatus == true) {
                                   return Align(

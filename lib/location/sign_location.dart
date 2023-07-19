@@ -13,7 +13,6 @@ void main() {
     ),
   );
 }
-
 class KonumKayit extends StatefulWidget {
   static double? latitude;
   static double? longitude;
@@ -22,19 +21,16 @@ class KonumKayit extends StatefulWidget {
   @override
   _KonumKayitState createState() => _KonumKayitState();
 }
-
 class _KonumKayitState extends State<KonumKayit> {
   @override
   void initState() {
     super.initState();
     _getUserLocation();
   }
-
   Future<void> _getUserLocation() async {
     LocationProvider locationProvider = Provider.of<LocationProvider>(context, listen: false);
     await locationProvider.requestUserLocation();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,42 +44,43 @@ class _KonumKayitState extends State<KonumKayit> {
         ),
       ),
       body: Center(
-        child: Consumer<LocationProvider>(
-          builder: (context, locationProvider, _) {
-            if (locationProvider.showDialog) {
-              return AlertDialog(
-                title: const Text('Adres Bilgisi'),
-                content: locationProvider.userAddress != null && locationProvider.userAddress!.isNotEmpty
-                    ? Text('Adresiniz: ${locationProvider.userAddress![0]}')
-                    : const Text('Adres bilgisi bulunamadı.'),
-                actions: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                    onPressed: () {
-                      locationProvider.toggleShowDialog();
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Reddet'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      locationProvider.toggleShowDialog();
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Onaylıyorum'),
-                  ),
-                ],
-              );
-            } else {
-              return const CircularProgressIndicator(color: Colors.deepPurple);
-            }
-          },
+        child: SingleChildScrollView(
+          child: Consumer<LocationProvider>(
+            builder: (context, locationProvider, _) {
+              if (locationProvider.showDialog) {
+                return AlertDialog(
+                  title: const Text('Adres Bilgisi'),
+                  content: locationProvider.userAddress != null && locationProvider.userAddress!.isNotEmpty
+                      ? Text('Adresiniz: ${locationProvider.userAddress![0]}')
+                      : const Text('Adres bilgisi bulunamadı.'),
+                  actions: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      onPressed: () {
+                        locationProvider.toggleShowDialog();
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Reddet'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        locationProvider.toggleShowDialog();
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Onaylıyorum'),
+                    ),
+                  ],
+                );
+              } else {
+                return const CircularProgressIndicator(color: Colors.deepPurple);
+              }
+            },
+          ),
         ),
       ),
     );
   }
 }
-
 class LocationProvider extends ChangeNotifier {
   final Gps _gps = Gps();
   Position? _userPosition;
@@ -114,19 +111,16 @@ class LocationProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
   void toggleShowDialog() {
     _showDialog = !_showDialog;
     notifyListeners();
   }
-
   @override
   void dispose() {
     _gps.StopPositionStream();
     super.dispose();
   }
 }
-
 class Gps {
   late StreamSubscription<Position> _positionStream;
 
@@ -138,11 +132,9 @@ class Gps {
     permission = await Geolocator.requestPermission();
     return isAccessGranted(permission);
   }
-
   bool isAccessGranted(LocationPermission permission) {
     return permission == LocationPermission.whileInUse || permission == LocationPermission.always;
   }
-
   Future<Position> getUserLocation() async {
     bool permissionGranted = await requestPermission();
     if (!permissionGranted) {
@@ -150,7 +142,6 @@ class Gps {
     }
     return Geolocator.getCurrentPosition();
   }
-
   Future<void> startPositionStream(Function(Position position) callback) async {
     bool permissionGranted = await requestPermission();
     if (!permissionGranted) {
@@ -158,7 +149,6 @@ class Gps {
     }
     _positionStream = Geolocator.getPositionStream().listen(callback);
   }
-
   void StopPositionStream() {
     _positionStream.cancel();
   }
