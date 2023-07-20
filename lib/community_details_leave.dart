@@ -181,7 +181,7 @@ class _CommunityDetailsLeaveState extends State<CommunityDetailsLeave> {
                                   });
                                   Navigator.push(context, MaterialPageRoute(builder: (context) =>const RequestSent(),));
                                 },
-                                child: const Text("Topluluğa Katıl"),
+                                child: const Text("Topluluktan Ayrıl"),
                               ),
                             )
                           ],

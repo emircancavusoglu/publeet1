@@ -9,13 +9,14 @@ import 'communityWorld.dart';
 import 'add_community.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'community_details_leave.dart';
+
 class SelectionScreen extends StatefulWidget {
   const SelectionScreen({Key? key}) : super(key: key);
 
   @override
   State<SelectionScreen> createState() => _SelectionScreenState();
 }
-
 class _SelectionScreenState extends State<SelectionScreen> {
   final TextEditingController toplulukAdController = TextEditingController();
 
@@ -25,7 +26,14 @@ class _SelectionScreenState extends State<SelectionScreen> {
       MaterialPageRoute(builder: (context) => const LoginScreen()),
     );
   }
-
+  void navigateToCommunityDetailsLeave(String communityName) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CommunityDetailsLeave(communityName: communityName),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final User? currentUser = FirebaseAuth.instance.currentUser;
@@ -57,18 +65,22 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       if (snapshot.hasData) {
                         final List<String> userCommunities = snapshot.data ?? [];
                         return SizedBox(
-                          height: 200, // Yüksekliği ayarlayarak kaydırılabilir alanı kontrol edin
+                          height: 200,
                           child: ListView.builder(
                             itemCount: userCommunities.length,
                             itemBuilder: (context, index) {
-                              return Text(
-                                userCommunities[index],
-                                style: const TextStyle(
-                                  color: Colors.deepPurple,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
+                              final communityName = userCommunities[index];
+                              return GestureDetector(
+                                onTap: () => navigateToCommunityDetailsLeave(communityName),
+                                child: Text(
+                                  communityName,
+                                  style: const TextStyle(
+                                    color: Colors.deepPurple,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
                               );
                             },
                           ),
@@ -203,6 +215,7 @@ class BubbleWidget extends StatelessWidget {
     required this.onPressed,
     this.width = 100,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -235,6 +248,7 @@ class BubbleWidget extends StatelessWidget {
     );
   }
 }
+
 Stream<List<String>> getData(String id) {
   return FirebaseFirestore.instance
       .collection('users')
