@@ -56,14 +56,22 @@ class _SelectionScreenState extends State<SelectionScreen> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         final List<String> userCommunities = snapshot.data ?? [];
-                        return Text(
-                          userCommunities.join(', '), // Toplulukları virgülle ayrılmış bir şekilde göster
-                          style: const TextStyle(
-                            color: Colors.deepPurple,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                        return SizedBox(
+                          height: 200, // Yüksekliği ayarlayarak kaydırılabilir alanı kontrol edin
+                          child: ListView.builder(
+                            itemCount: userCommunities.length,
+                            itemBuilder: (context, index) {
+                              return Text(
+                                userCommunities[index],
+                                style: const TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              );
+                            },
                           ),
-                          textAlign: TextAlign.center,
                         );
                       } else {
                         return const Text(
@@ -80,7 +88,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 100),
+              const SizedBox(height: 45),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -195,7 +203,6 @@ class BubbleWidget extends StatelessWidget {
     required this.onPressed,
     this.width = 100,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -228,7 +235,6 @@ class BubbleWidget extends StatelessWidget {
     );
   }
 }
-// getData fonksiyonu kullanıcının email adresini alarak kullanıcının katıldığı toplulukları döndürür.
 Stream<List<String>> getData(String id) {
   return FirebaseFirestore.instance
       .collection('users')
@@ -243,4 +249,3 @@ Stream<List<String>> getData(String id) {
     }
   });
 }
-
