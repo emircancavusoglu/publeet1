@@ -14,6 +14,7 @@ class CommunityDetailsLeave extends StatefulWidget {
   @override
   _CommunityDetailsLeaveState createState() => _CommunityDetailsLeaveState();
 }
+
 class _CommunityDetailsLeaveState extends State<CommunityDetailsLeave> {
   String? _currentAddress;
   final communityNameController = TextEditingController();
@@ -25,6 +26,28 @@ class _CommunityDetailsLeaveState extends State<CommunityDetailsLeave> {
     final locationProvider = Provider.of<LocationProvider>(context);
     final userAddress = locationProvider.userAddress;
     User? currentUser = _auth.currentUser;
+
+    Future<void> topluluktanAyril() async {
+      final userDocRef = FirebaseFirestore.instance.collection("users").doc(currentUser!.uid);
+
+      // Kullanıcının topluluk listesinden çıkarılması için güncelleme
+      await userDocRef.update({
+        "joinedCommunities": FieldValue.arrayRemove([widget.communityName]),
+      });
+
+      // İlgili topluluk isteğinin silinmesi
+      await FirebaseFirestore.instance
+          .collection('community_requests')
+          .where('communityName', isEqualTo: widget.communityName)
+          .where('userEmail', isEqualTo: currentUser.email)
+          .get()
+          .then((querySnapshot) {
+        for (var doc in querySnapshot.docs) {
+          doc.reference.delete();
+        }
+      });
+    Navigator.pop(context);
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
@@ -159,27 +182,7 @@ class _CommunityDetailsLeaveState extends State<CommunityDetailsLeave> {
                             Center(
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  final userEmail = currentUser!.email;
-                                  final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
-                                  await FirebaseFirestore.instance.collection("communities").add({
-                                    "communityName": widget.communityName,
-                                    "description": _descriptionController.text,
-                                    "communityAddress": _currentAddress,
-                                  });
-                                  // Eğer users belgesi varsa, katıldığı toplulukları diziye ekleyin, yoksa yeni bir belge oluşturun
-                                  DocumentReference userDocRef = FirebaseFirestore.instance.collection("users").doc(currentUser!.uid);
-                                  userDocRef.get().then((docSnapshot) async {
-                                    if (docSnapshot.exists) {
-                                      await userDocRef.update({
-                                        "joinedCommunities": FieldValue.arrayUnion([widget.communityName]),
-                                      });
-                                    } else {
-                                      await userDocRef.set({
-                                        "joinedCommunities": [widget.communityName],
-                                      });
-                                    }
-                                  });
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) =>const RequestSent(),));
+                                  await topluluktanAyril();
                                 },
                                 child: const Text("Topluluktan Ayrıl"),
                               ),
