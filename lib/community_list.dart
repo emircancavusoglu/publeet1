@@ -28,7 +28,7 @@ class _CommunityListState extends State<CommunityList> {
   @override
   void initState() {
     super.initState();
-    _startListeningToLocationUpdates();
+    _getCurrentLocation();
   }
 
   // Kullanıcının mevcut konumunu almak için
@@ -46,15 +46,6 @@ class _CommunityListState extends State<CommunityList> {
     }
   }
 
-  // Kullanıcının konumunu anlık olarak güncellemek için
-  _startListeningToLocationUpdates() {
-    Geolocator.getPositionStream().listen((position) {
-      setState(() {
-        _userLatitude = position.latitude;
-        _userLongitude = position.longitude;
-      });
-    });
-  }
   @override
   Widget build(BuildContext context) {
     // Eğer konum bilgileri alınmadıysa, bir yükleniyor göstergesi göster.
@@ -67,6 +58,7 @@ class _CommunityListState extends State<CommunityList> {
         body: const Center(child: CircularProgressIndicator()),
       );
     }
+
     User? currentUser = _auth.currentUser;
     return Scaffold(
       appBar: AppBar(
@@ -89,9 +81,12 @@ class _CommunityListState extends State<CommunityList> {
                   _userLatitude,
                   _userLongitude,
                 );
+                Future<String?> communityAddressFuture =
+                getCommunityAddress(communityName);
                 sortedCommunities.add({
                   "name": communityName,
                   "distance": distance,
+                  "address": communityAddressFuture,
                 });
               }
               // Konuma göre sıralama yapalım
@@ -101,36 +96,44 @@ class _CommunityListState extends State<CommunityList> {
                 itemBuilder: (context, index) {
                   String communityName = sortedCommunities[index]["name"];
                   double distance = sortedCommunities[index]["distance"];
-
-                  return ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => JoinCommunityDetails(communityName: communityName),
+                  Future<String?> communityAddressFuture = sortedCommunities[index]["address"] as Future<String?>;
+                  return FutureBuilder<String?>(
+                    future: communityAddressFuture,
+                    builder: (context, snapshot) {
+                      String? communityAddress = snapshot.data;
+                      return ListTile(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => JoinCommunityDetails(
+                                communityName: communityName,
+                              ),
+                            ),
+                          );
+                        },
+                        title: Row(
+                          children: [
+                            const SizedBox(width: 8),
+                            Text(
+                              communityName,
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              "${distance.toStringAsFixed(1)} km uzaklıkta",
+                              style: const TextStyle(
+                                color: Colors.deepPurple,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 3),
+                            const Icon(Icons.stars_outlined),
+                          ],
                         ),
+                        subtitle: Text(communityAddress ?? ""),
                       );
                     },
-                    title: Row(
-                      children: [
-                        const SizedBox(width: 8),
-                        Text(
-                          communityName,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          "${distance.toStringAsFixed(1)} km uzaklıkta",
-                          style: const TextStyle(
-                            color: Colors.deepPurple,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 3),
-                        const Icon(Icons.stars_outlined),
-                      ],
-                    ),
-                    subtitle: Text(widget.address ?? ""),
                   );
                 },
               );
@@ -151,28 +154,38 @@ class _CommunityListState extends State<CommunityList> {
       ),
     );
   }
-
-  Future<String> getRandomCommunityName(int randomIndex) async {
-    var collectionRef = FirebaseFirestore.instance.collection('community_requests');
-    var snapshot = await collectionRef.get();
-    if (snapshot.docs.isEmpty) {
-      return "";
+  Future<String?> getCommunityAddress(String communityName) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final QuerySnapshot snapshot = await firestore
+          .collection('community_requests')
+          .where('communityName', isEqualTo: communityName)
+          .limit(1)
+          .get();
+      // Belge varsa adres bilgisini döndürün
+      if (snapshot.docs.isNotEmpty) {
+        final DocumentSnapshot documentSnapshot = snapshot.docs.first;
+        final Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+        final String? communityAddress = data['communityAddress'] as String?;
+        return communityAddress;
+      } else {
+        // Belge yoksa veya adres bilgisi boşsa null döndürün
+        return null;
+      }
+    } catch (e) {
+      // Hata durumunda null döndürün
+      print('Hata: $e');
+      return null;
     }
-
-    var communityNames = snapshot.docs.map((doc) => doc.get('communityName').toString()).toList();
-    var communityName = communityNames[randomIndex];
-    return communityName;
   }
 
   double calculateDistance(double lat1, double lon1) {
     const double earthRadius = 6371; // Dünya yarıçapı (km)
-
     // Radyan cinsinden enlem ve boylam değerlerine dönüştürme
     double lat1Rad = degToRad(lat1);
     double lon1Rad = degToRad(lon1);
     double lat2Rad = degToRad(_userLatitude); // Kullanıcının mevcut enlem değeri
     double lon2Rad = degToRad(_userLongitude); // Kullanıcının mevcut boylam değeri
-
     // Haversine formülü kullanılarak iki nokta arasındaki mesafeyi hesaplama
     double dLat = lat2Rad - lat1Rad;
     double dLon = lon2Rad - lon1Rad;
