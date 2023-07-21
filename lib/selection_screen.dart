@@ -12,17 +12,21 @@ import 'community_details_leave.dart';
 
 class SelectionScreen extends StatefulWidget {
   const SelectionScreen({Key? key}) : super(key: key);
+
   @override
   State<SelectionScreen> createState() => _SelectionScreenState();
 }
+
 class _SelectionScreenState extends State<SelectionScreen> {
   final TextEditingController toplulukAdController = TextEditingController();
+
   void toLoginScreen() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),
     );
   }
+
   void navigateToCommunityDetailsLeave(String communityName) {
     Navigator.push(
       context,
@@ -31,11 +35,41 @@ class _SelectionScreenState extends State<SelectionScreen> {
       ),
     );
   }
+
+  void _openDrawer() {
+    Scaffold.of(context).openDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
     final User? currentUser = FirebaseAuth.instance.currentUser;
     Stream<List<String>> userCommunitiesStream = getData(currentUser?.uid ?? '');
+
     return Scaffold(
+      appBar: AppBar(),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.deepPurple,
+              ),
+              child: Text(
+                'Publeet',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.announcement),
+              title: const Text('Duyurular'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(5.0),
@@ -197,6 +231,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
     );
   }
 }
+
 class BubbleWidget extends StatelessWidget {
   final IconData icon;
   final String text;
@@ -209,6 +244,7 @@ class BubbleWidget extends StatelessWidget {
     required this.onPressed,
     this.width = 100,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(

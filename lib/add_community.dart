@@ -85,6 +85,9 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                         return null;
                       },
                     ),
+                    IconButton(onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const KonumKayit(),));
+                    }, icon: const Icon(Icons.add_location_alt)),
                     const SizedBox(height: 32),
                     ElevatedButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.deepPurple)),
@@ -101,6 +104,12 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                             Placemark place = placemarks[0];
                             _currentAddress = '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
                           }
+                          bool isCommunityNameExists = await _isCommunityNameExists(communityNameController.text);
+                          if (isCommunityNameExists) {
+                            final snackBar = SnackBar(content: const Text("Bu isimde bir topluluk zaten mevcut!"));
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            return;
+                          }
                           await FirebaseFirestore.instance.collection("community").doc(userEmail).set({
                             "communityName": communityNameController.text,
                           });
@@ -113,7 +122,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                             "communityAddress": _currentAddress,
                             "requestStatus": false,
                           });
-                          final snackBar = const SnackBar(content: Text("Bilgiler kaydedildi"));
+                          const snackBar = SnackBar(content: Text("Bilgiler kaydedildi"));
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                           Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity()));
                         } else {
@@ -135,5 +144,20 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
         ),
       ),
     );
+  }
+
+  Future<bool> _isCommunityNameExists(String communityName) async {
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final QuerySnapshot snapshot = await firestore
+          .collection('community_requests')
+          .where('communityName', isEqualTo: communityName)
+          .limit(1)
+          .get();
+      return snapshot.docs.isNotEmpty;
+    } catch (e) {
+      print('Hata: $e');
+      return false;
+    }
   }
 }
