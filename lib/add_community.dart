@@ -85,58 +85,40 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                         return null;
                       },
                     ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const KonumKayit()),
-                        );
-                      },
-                      icon: const Icon(Icons.add_location_alt),
-                    ),
                     const SizedBox(height: 32),
                     ElevatedButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.deepPurple)),
                       onPressed: () async {
                         final currentUser = _auth.currentUser;
                         final userEmail = currentUser?.email ?? '';
-
-                        // Burada "_isLoading" değişkenini "true" olarak değiştirerek kayıt işleminin başlamasını sağlıyoruz.
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        if (_formKey.currentState!.validate()) {
-                          final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
-                          if (userPosition != null) {
-                            final List<Placemark> placemarks = await placemarkFromCoordinates(
-                              userPosition.latitude,
-                              userPosition.longitude,
-                            );
-                            if (placemarks.isNotEmpty) {
-                              Placemark place = placemarks[0];
-                              _currentAddress = '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
-                            }
-                            await FirebaseFirestore.instance.collection("community").doc(userEmail).set({
-                              "communityName": communityNameController.text,
-                            });
-                            await FirebaseFirestore.instance.collection("community_requests").add({
-                              "communityName": communityNameController.text,
-                              "description": _descriptionController.text,
-                              "userEmail": userEmail,
-                              "latitude": userPosition.latitude,
-                              "longitude": userPosition.longitude,
-                              "communityAddress": _currentAddress,
-                              "requestStatus": false,
-                            });
-                            setState(() {
-                              _isLoading = false; // Kayıt işlemi tamamlandığında "_isLoading" değişkenini tekrar "false" olarak değiştiriyoruz.
-                            });
-                            final snackBar = ScaffoldMessenger.of(context);
-                            snackBar.showSnackBar(
-                              const SnackBar(content: Text("Bilgiler kaydedildi")),
-                            );
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity()));
+                        final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
+                        if (_formKey.currentState!.validate() && userPosition != null) {
+                          final List<Placemark> placemarks = await placemarkFromCoordinates(
+                            userPosition.latitude,
+                            userPosition.longitude,
+                          );
+                          if (placemarks.isNotEmpty) {
+                            Placemark place = placemarks[0];
+                            _currentAddress = '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
                           }
+                          await FirebaseFirestore.instance.collection("community").doc(userEmail).set({
+                            "communityName": communityNameController.text,
+                          });
+                          await FirebaseFirestore.instance.collection("community_requests").add({
+                            "communityName": communityNameController.text,
+                            "description": _descriptionController.text,
+                            "userEmail": userEmail,
+                            "latitude": userPosition.latitude,
+                            "longitude": userPosition.longitude,
+                            "communityAddress": _currentAddress,
+                            "requestStatus": false,
+                          });
+                          final snackBar = const SnackBar(content: Text("Bilgiler kaydedildi"));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity()));
+                        } else {
+                          final snackBar = SnackBar(content: const Text("Konum bilgisi alınamadı veya formda eksik bilgi var!"));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
                       },
                       child: const Text("Kaydet"),
