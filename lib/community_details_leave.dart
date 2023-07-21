@@ -46,7 +46,7 @@ class _CommunityDetailsLeaveState extends State<CommunityDetailsLeave> {
           doc.reference.delete();
         }
       });
-    Navigator.pop(context);
+      Navigator.pop(context);
     }
     return Scaffold(
       appBar: AppBar(

@@ -8,18 +8,15 @@ import 'package:publeet1/my_communities.dart';
 import 'communityWorld.dart';
 import 'add_community.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'community_details_leave.dart';
 
 class SelectionScreen extends StatefulWidget {
   const SelectionScreen({Key? key}) : super(key: key);
-
   @override
   State<SelectionScreen> createState() => _SelectionScreenState();
 }
 class _SelectionScreenState extends State<SelectionScreen> {
   final TextEditingController toplulukAdController = TextEditingController();
-
   void toLoginScreen() {
     Navigator.push(
       context,
@@ -38,7 +35,6 @@ class _SelectionScreenState extends State<SelectionScreen> {
   Widget build(BuildContext context) {
     final User? currentUser = FirebaseAuth.instance.currentUser;
     Stream<List<String>> userCommunitiesStream = getData(currentUser?.uid ?? '');
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -201,13 +197,11 @@ class _SelectionScreenState extends State<SelectionScreen> {
     );
   }
 }
-
 class BubbleWidget extends StatelessWidget {
   final IconData icon;
   final String text;
   final VoidCallback onPressed;
   final double width;
-
   const BubbleWidget({
     Key? key,
     required this.icon,
@@ -215,7 +209,6 @@ class BubbleWidget extends StatelessWidget {
     required this.onPressed,
     this.width = 100,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -223,13 +216,13 @@ class BubbleWidget extends StatelessWidget {
       child: Container(
         width: width,
         height: 120,
-        color: Colors.deepPurple,
+        color: Colors.white,
         child: TextButton(
           onPressed: onPressed,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: Colors.white),
+              Icon(icon, color: Colors.deepPurple),
               const SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -237,7 +230,7 @@ class BubbleWidget extends StatelessWidget {
                   text,
                   style: const TextStyle(
                     fontSize: 24,
-                    color: Colors.white,
+                    color: Colors.deepPurple,
                   ),
                 ),
               ),
@@ -248,7 +241,6 @@ class BubbleWidget extends StatelessWidget {
     );
   }
 }
-
 Stream<List<String>> getData(String id) {
   return FirebaseFirestore.instance
       .collection('users')

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import 'package:publeet1/community_details.dart';
 import 'package:publeet1/join_community_details.dart';
 import 'dart:math' as math;
 
 import 'my_communities.dart';
+import 'location/sign_location.dart'; // LocationProvider sınıfını içeri aktar
 
 class CommunityList extends StatefulWidget {
   final String? address;
@@ -26,9 +28,10 @@ class _CommunityListState extends State<CommunityList> {
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
+    _startListeningToLocationUpdates();
   }
 
+  // Kullanıcının mevcut konumunu almak için
   _getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -43,9 +46,18 @@ class _CommunityListState extends State<CommunityList> {
     }
   }
 
+  // Kullanıcının konumunu anlık olarak güncellemek için
+  _startListeningToLocationUpdates() {
+    Geolocator.getPositionStream().listen((position) {
+      setState(() {
+        _userLatitude = position.latitude;
+        _userLongitude = position.longitude;
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    // Eğer konum bilgileri alınmadıysa, bir yükleniyor göstergesi gösterelim.
+    // Eğer konum bilgileri alınmadıysa, bir yükleniyor göstergesi göster.
     if (_userLatitude == 0.0 || _userLongitude == 0.0) {
       return Scaffold(
         appBar: AppBar(
@@ -55,9 +67,7 @@ class _CommunityListState extends State<CommunityList> {
         body: const Center(child: CircularProgressIndicator()),
       );
     }
-
     User? currentUser = _auth.currentUser;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
@@ -78,19 +88,14 @@ class _CommunityListState extends State<CommunityList> {
                 double distance = calculateDistance(
                   _userLatitude,
                   _userLongitude,
-                  0.0, // Diğer konumun enlem değeri com. details sayfasından al.
-                  0.0, // Diğer konumun boylam değeri
                 );
-
                 sortedCommunities.add({
                   "name": communityName,
                   "distance": distance,
                 });
               }
-
               // Konuma göre sıralama yapalım
               sortedCommunities.sort((a, b) => a["distance"].compareTo(b["distance"]));
-
               return ListView.builder(
                 itemCount: sortedCommunities.length,
                 itemBuilder: (context, index) {
@@ -159,14 +164,14 @@ class _CommunityListState extends State<CommunityList> {
     return communityName;
   }
 
-  double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+  double calculateDistance(double lat1, double lon1) {
     const double earthRadius = 6371; // Dünya yarıçapı (km)
 
     // Radyan cinsinden enlem ve boylam değerlerine dönüştürme
     double lat1Rad = degToRad(lat1);
     double lon1Rad = degToRad(lon1);
-    double lat2Rad = degToRad(lat2);
-    double lon2Rad = degToRad(lon2);
+    double lat2Rad = degToRad(_userLatitude); // Kullanıcının mevcut enlem değeri
+    double lon2Rad = degToRad(_userLongitude); // Kullanıcının mevcut boylam değeri
 
     // Haversine formülü kullanılarak iki nokta arasındaki mesafeyi hesaplama
     double dLat = lat2Rad - lat1Rad;

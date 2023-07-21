@@ -52,7 +52,6 @@ class _CommunityDetailsState extends State<CommunityDetails> {
             List<String> descriptions = [];
             List<double> latitudes = [];
             List<double> longitudes = [];
-
             for (var doc in snapshot.data!.docs) {
               var description = doc.get('description');
               var latitude = doc.get('latitude') as double;
@@ -61,9 +60,7 @@ class _CommunityDetailsState extends State<CommunityDetails> {
               latitudes.add(latitude);
               longitudes.add(longitude);
             }
-
             var requestStatus = snapshot.data!.docs[0].get('requestStatus');
-
             if (requestStatus == true) {
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 13),
