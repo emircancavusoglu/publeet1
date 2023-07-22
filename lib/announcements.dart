@@ -10,6 +10,10 @@ class Announc extends StatefulWidget {
 class _AnnouncState extends State<Announc> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: (
+      AppBar(title: const Text("Duyurular"),)
+      ),
+    );
   }
 }

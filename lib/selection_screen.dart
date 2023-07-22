@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:publeet1/announcements.dart';
 import 'package:publeet1/find_community.dart';
 import 'package:publeet1/login_screen.dart';
 import 'package:publeet1/my_notifications.dart';
@@ -61,7 +62,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
             ListTile(
               leading: const Icon(Icons.announcement),
               title: const Text('Duyurular'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const Announc(),));
+              },
             ),
           ],
         ),
