@@ -35,18 +35,14 @@ class _SelectionScreenState extends State<SelectionScreen> {
       ),
     );
   }
-
-  void _openDrawer() {
-    Scaffold.of(context).openDrawer();
-  }
-
   @override
   Widget build(BuildContext context) {
     final User? currentUser = FirebaseAuth.instance.currentUser;
     Stream<List<String>> userCommunitiesStream = getData(currentUser?.uid ?? '');
-
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text("Hoşgeldin"),
+      ),
       drawer: Drawer(
         child: ListView(
           children: [
