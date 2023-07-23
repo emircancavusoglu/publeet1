@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:publeet1/community_details.dart';
+import 'package:publeet1/create_announcements.dart';
 
 class AnnounceAdmin extends StatefulWidget {
   const AnnounceAdmin({Key? key}) : super(key: key);
@@ -32,7 +33,7 @@ class _AnnounceAdminState extends State<AnnounceAdmin> {
             SizedBox(
               width: 26,
             ),
-            Text("Duyuru Oluştur"),
+            Text("Topluluk Seç"),
             SizedBox(
               width: 2,
             ),
@@ -43,21 +44,7 @@ class _AnnounceAdminState extends State<AnnounceAdmin> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            color: Colors.white70, // Set the background color for the heading
-            child: const Text(
-              "Topluluk Seç", // Your heading text
-              style: TextStyle(
-                decoration: TextDecoration.underline,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue, // Set the text color for the heading
-              ),
-            ),
-          ),
           Expanded(
-            // Use the Expanded widget to allow the ListView to take remaining space
             child: StreamBuilder<List<String>>(
               stream: data.getData(currentUser!.email.toString()),
               builder: (context, snapshot) {
@@ -77,12 +64,7 @@ class _AnnounceAdminState extends State<AnnounceAdmin> {
                                   alignment: Alignment.centerLeft,
                                   child: TextButton(
                                     onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => CommunityDetails(communityName: communityNames[index]),
-                                        ),
-                                      );
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAnnouncements(communityName: communityNames[index],),));
                                     },
                                     child: Text(
                                       communityNames[index],
