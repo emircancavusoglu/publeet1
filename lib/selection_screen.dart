@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:publeet1/announcements.dart';
+import 'package:publeet1/announcements_admin.dart';
 import 'package:publeet1/find_community.dart';
 import 'package:publeet1/login_screen.dart';
 import 'package:publeet1/my_notifications.dart';
@@ -27,7 +28,6 @@ class _SelectionScreenState extends State<SelectionScreen> {
       MaterialPageRoute(builder: (context) => const LoginScreen()),
     );
   }
-
   void navigateToCommunityDetailsLeave(String communityName) {
     Navigator.push(
       context,
@@ -64,6 +64,13 @@ class _SelectionScreenState extends State<SelectionScreen> {
               title: const Text('Duyurular'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const Announc(),));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.announcement_outlined),
+              title: const Text('Duyurularım'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AnnounceAdmin(),));
               },
             ),
           ],
