@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:publeet1/announcements.dart';
-import 'package:publeet1/announcements_admin.dart';
-import 'package:publeet1/find_community.dart';
-import 'package:publeet1/login_screen.dart';
-import 'package:publeet1/my_notifications.dart';
-import 'package:publeet1/utilities/google_sign_in.dart';
-import 'package:publeet1/my_communities.dart';
-import 'communityWorld.dart';
-import 'add_community.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'add_community.dart';
+import 'announcements.dart';
+import 'announcements_admin.dart';
+import 'communityWorld.dart';
 import 'community_details_leave.dart';
+import 'find_community.dart';
+import 'login_screen.dart';
+import 'my_communities.dart';
+import 'my_notifications.dart';
+import 'utilities/google_sign_in.dart';
 
 class SelectionScreen extends StatefulWidget {
   const SelectionScreen({Key? key}) : super(key: key);
@@ -28,6 +28,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
       MaterialPageRoute(builder: (context) => const LoginScreen()),
     );
   }
+
   void navigateToCommunityDetailsLeave(String communityName) {
     Navigator.push(
       context,
@@ -36,6 +37,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final User? currentUser = FirebaseAuth.instance.currentUser;
@@ -76,162 +78,160 @@ class _SelectionScreenState extends State<SelectionScreen> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50),
-              Column(
-                children: [
-                  const Text(
-                    "Kayıtlı Olduğun Topluluklar:",
-                    style: TextStyle(
-                      color: Colors.deepPurple,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.underline,
-                    ),
-                    textAlign: TextAlign.center,
+      body: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 50),
+            Column(
+              children: [
+                const Text(
+                  "Kayıtlı Olduğun Topluluklar:",
+                  style: TextStyle(
+                    color: Colors.deepPurple,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
                   ),
-                  StreamBuilder<List<String>>(
-                    stream: userCommunitiesStream,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final List<String> userCommunities = snapshot.data ?? [];
-                        return SizedBox(
-                          height: 200,
-                          child: ListView.builder(
-                            itemCount: userCommunities.length,
-                            itemBuilder: (context, index) {
-                              final communityName = userCommunities[index];
-                              return GestureDetector(
-                                onTap: () => navigateToCommunityDetailsLeave(communityName),
-                                child: Text(
-                                  communityName,
-                                  style: const TextStyle(
-                                    color: Colors.deepPurple,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.center,
+                ),
+                StreamBuilder<List<String>>(
+                  stream: userCommunitiesStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final List<String> userCommunities = snapshot.data ?? [];
+                      return SizedBox(
+                        height: 90,
+                        child: ListView.builder(
+                          itemCount: userCommunities.length,
+                          itemBuilder: (context, index) {
+                            final communityName = userCommunities[index];
+                            return GestureDetector(
+                              onTap: () => navigateToCommunityDetailsLeave(communityName),
+                              child: Text(
+                                communityName,
+                                style: const TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              );
-                            },
-                          ),
-                        );
-                      } else {
-                        return const Text(
-                          'Topluluklar Yükleniyor...',
-                          style: TextStyle(
-                            color: Colors.deepPurple,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        );
-                      }
+                                textAlign: TextAlign.center,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    } else {
+                      return const Text(
+                        'Topluluklar Yükleniyor...',
+                        style: TextStyle(
+                          color: Colors.deepPurple,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 45),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: BubbleWidget(
+                    icon: Icons.group_add_outlined,
+                    text: "Topluluk Ekle",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AddCommunityForm(),
+                        ),
+                      );
                     },
                   ),
-                ],
-              ),
-              const SizedBox(height: 45),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: BubbleWidget(
-                      icon: Icons.group_add_outlined,
-                      text: "Topluluk Ekle",
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AddCommunityForm(),
-                          ),
-                        );
-                      },
-                    ),
+                ),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: BubbleWidget(
+                    icon: Icons.search,
+                    text: "Topluluk Bul",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FindCommunity(),
+                        ),
+                      );
+                    },
                   ),
-                  const SizedBox(width: 5),
-                  Expanded(
-                    child: BubbleWidget(
-                      icon: Icons.search,
-                      text: "Topluluk Bul",
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const FindCommunity(),
-                          ),
-                        );
-                      },
-                    ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: BubbleWidget(
+                    icon: Icons.public,
+                    text: "Keşfet",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CommunityWorld(),
+                        ),
+                      );
+                    },
                   ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: BubbleWidget(
-                      icon: Icons.public,
-                      text: "Keşfet",
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CommunityWorld(),
-                          ),
-                        );
-                      },
-                    ),
+                ),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: BubbleWidget(
+                    icon: Icons.group,
+                    text: "Topluluklarım",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MyCommunities(),
+                        ),
+                      );
+                    },
                   ),
-                  const SizedBox(width: 5),
-                  Expanded(
-                    child: BubbleWidget(
-                      icon: Icons.group,
-                      text: "Topluluklarım",
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MyCommunities(),
-                          ),
-                        );
-                      },
-                    ),
+                ),
+                const SizedBox(width: 5),
+              ],
+            ),
+            const SizedBox(height: 5),
+            BubbleWidget(
+              icon: Icons.notifications,
+              text: "İsteklerim",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyNotifications(),
                   ),
-                  const SizedBox(width: 5),
-                ],
-              ),
-              const SizedBox(height: 5),
-              BubbleWidget(
-                icon: Icons.notifications,
-                text: "İsteklerim",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MyNotifications(),
-                    ),
-                  );
-                },
-                width: 160,
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton.icon(
-                onPressed: () async {
-                  await signOutWithGoogle();
-                  toLoginScreen();
-                },
-                icon: const Icon(Icons.logout_outlined),
-                label: const Text("Çıkış Yap"),
-              ),
-            ],
-          ),
+                );
+              },
+              width: 160,
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton.icon(
+              onPressed: () async {
+                await signOutWithGoogle();
+                toLoginScreen();
+              },
+              icon: const Icon(Icons.logout_outlined),
+              label: const Text("Çıkış Yap"),
+            ),
+          ],
         ),
       ),
     );
@@ -283,6 +283,7 @@ class BubbleWidget extends StatelessWidget {
     );
   }
 }
+
 Stream<List<String>> getData(String id) {
   return FirebaseFirestore.instance
       .collection('users')
