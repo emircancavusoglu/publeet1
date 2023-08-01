@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -51,6 +52,32 @@ class _CreateAnnouncementsState extends State<CreateAnnouncements> {
             ElevatedButton(
               onPressed: () {
                 String announcementText = _announcementController.text.trim();
+                if(announcementText.isNotEmpty){
+                  FirebaseFirestore.instance.collection("community_requests")
+                      .where("communityName", isEqualTo: widget.communityName)
+                      .get()
+                      .then((querySnapshot) {
+                    if (querySnapshot.size == 1) {
+                      var docId = querySnapshot.docs[0].id;
+                      FirebaseFirestore.instance.collection("community_requests")
+                          .doc(docId)
+                          .update({
+                        "announcement" : announcementText,
+                        "timeStamp" : FieldValue.serverTimestamp(),
+                      }).then((value) => _announcementController.clear());
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Duyuru başarıyla yayınlandı !"),duration: Duration(seconds: 2),));
+                    } else {
+                      // İlgili topluluk için daha önce kaydedilmiş bir belge yoksa, yeni bir belge oluşturabiliriz.
+                      FirebaseFirestore.instance.collection("community_requests").add(
+                          {
+                            "communityName": widget.communityName,
+                            "announcement": announcementText,
+                            "timeStamp": FieldValue.serverTimestamp(),
+                          }).then((value) => _announcementController.clear());
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Duyuru başarıyla yayınlandı !"),duration: Duration(seconds: 2),));
+                    }
+                  });
+                }
               },
               child: const Text("Duyuruyu Yayınla"),
             ),

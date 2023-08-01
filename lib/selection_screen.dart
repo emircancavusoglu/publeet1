@@ -237,7 +237,6 @@ class _SelectionScreenState extends State<SelectionScreen> {
     );
   }
 }
-
 class BubbleWidget extends StatelessWidget {
   final IconData icon;
   final String text;
@@ -283,7 +282,6 @@ class BubbleWidget extends StatelessWidget {
     );
   }
 }
-
 Stream<List<String>> getData(String id) {
   return FirebaseFirestore.instance
       .collection('users')
