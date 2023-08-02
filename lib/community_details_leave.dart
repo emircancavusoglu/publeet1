@@ -16,9 +16,7 @@ class CommunityDetailsLeave extends StatefulWidget {
 }
 
 class _CommunityDetailsLeaveState extends State<CommunityDetailsLeave> {
-  String? _currentAddress;
   final communityNameController = TextEditingController();
-  final _descriptionController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
@@ -29,12 +27,10 @@ class _CommunityDetailsLeaveState extends State<CommunityDetailsLeave> {
 
     Future<void> topluluktanAyril() async {
       final userDocRef = FirebaseFirestore.instance.collection("users").doc(currentUser!.uid);
-
       // Kullanıcının topluluk listesinden çıkarılması için güncelleme
       await userDocRef.update({
         "joinedCommunities": FieldValue.arrayRemove([widget.communityName]),
       });
-
       // İlgili topluluk isteğinin silinmesi
       await FirebaseFirestore.instance
           .collection('community_requests')

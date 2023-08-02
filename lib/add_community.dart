@@ -19,7 +19,6 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
   final communityNameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
   bool _isLoading = false;
 
   @override
@@ -106,7 +105,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                           }
                           bool isCommunityNameExists = await _isCommunityNameExists(communityNameController.text);
                           if (isCommunityNameExists) {
-                            final snackBar = SnackBar(content: const Text("Bu isimde bir topluluk zaten mevcut!"));
+                            final snackBar = const SnackBar(content: Text("Bu isimde bir topluluk zaten mevcut!"));
                             ScaffoldMessenger.of(context).showSnackBar(snackBar);
                             return;
                           }
