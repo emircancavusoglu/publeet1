@@ -17,35 +17,37 @@ class _AnnouncState extends State<Announc> {
     return Scaffold(
       appBar: AppBar(title: const Text("Duyurular")),
       body: StreamBuilder<List<String>>(
-        stream: getData(currentUser?.uid ?? ''), // Kullanıcının topluluklarını almak için stream kullanıyoruz
+        stream: getData(currentUser?.uid ?? ''),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           } else if (snapshot.hasData) {
             final List<String> userCommunities = snapshot.data ?? [];
             return StreamBuilder<QuerySnapshot>(
-              stream: _getAnnouncements(userCommunities), // Duyuruları almak için stream kullanıyoruz
+              stream: _getAnnouncements(userCommunities),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
                 } else if (snapshot.hasData) {
-                  // Kullanıcının dahil olduğu topluluğun duyurularını göster
                   final List<QueryDocumentSnapshot> announcements = snapshot.data!.docs;
-                  return ListView.builder(
-                    itemCount: announcements.length,
-                    itemBuilder: (context, index) {
-                      final announcement = announcements[index];
-                      final String communityName = announcement['communityName'];
-                      final String announcementText = announcement['announcement'];
-                      final Timestamp timestamp = announcement['timeStamp'];
+                  return SingleChildScrollView(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: announcements.length,
+                      itemBuilder: (context, index) {
+                        final announcement = announcements[index];
+                        final String communityName = announcement['communityName'];
+                        final String announcementText = announcement['announcement'];
+                        final Timestamp timestamp = announcement['timeStamp'];
 
-                      // Duyuru öğesinin görüntülenmesi burada gerçekleştirilecek
-                      return ListTile(
-                        title: Text(communityName),
-                        subtitle: Text(announcementText),
-                        trailing: Text(timestamp.toDate().toString()), // timestamp'ı tarihe dönüştürme örneği
-                      );
-                    },
+                        return ListTile(
+                          title: Text(communityName),
+                          subtitle: Text(announcementText),
+                          trailing: Text(timestamp.toDate().toString()),
+                        );
+                      },
+                    ),
                   );
                 } else {
                   return const Text("Duyuru yok");
@@ -59,6 +61,7 @@ class _AnnouncState extends State<Announc> {
       ),
     );
   }
+
   Stream<QuerySnapshot> _getAnnouncements(List<String> userCommunities) {
     return FirebaseFirestore.instance
         .collection("community_requests")

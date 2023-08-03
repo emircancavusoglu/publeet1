@@ -97,9 +97,11 @@ class _CommunityListState extends State<CommunityList> {
                           title: Row(
                             children: [
                               const SizedBox(width: 8),
-                              Text(
-                                communityName,
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              Expanded(
+                                child: Text(
+                                  communityName,
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
                               const SizedBox(width: 8),
                               Text(
