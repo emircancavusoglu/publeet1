@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:publeet1/announcements_admin.dart';
+import 'package:publeet1/selection_screen.dart';
 
 @immutable
 class CreateAnnouncements extends StatefulWidget {
   final String communityName;
-  const CreateAnnouncements({required this.communityName, Key? key}) : super(key: key);
+  CreateAnnouncements({required this.communityName, Key? key}) : super(key: key);
+
   @override
   State<CreateAnnouncements> createState() => _CreateAnnouncementsState();
 }
@@ -50,37 +54,30 @@ class _CreateAnnouncementsState extends State<CreateAnnouncements> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 String announcementText = _announcementController.text.trim();
-                if(announcementText.isNotEmpty){
-                  FirebaseFirestore.instance.collection("community_requests")
-                      .where("communityName", isEqualTo: widget.communityName)
-                      .get()
-                      .then((querySnapshot) {
-                    if (querySnapshot.size == 1) {
-                      var docId = querySnapshot.docs[0].id;
-                      FirebaseFirestore.instance.collection("community_requests")
-                          .doc(docId)
-                          .update({
-                        "announcement" : announcementText,
-                        "timeStamp" : FieldValue.serverTimestamp(),
-                      }).then((value) => _announcementController.clear());
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Duyuru başarıyla yayınlandı !"),duration: Duration(seconds: 2),));
-                    } else {
-                      // İlgili topluluk için daha önce kaydedilmiş bir belge yoksa, yeni bir belge oluşturabiliriz.
-                      FirebaseFirestore.instance.collection("community_requests").add(
-                          {
-                            "communityName": widget.communityName,
-                            "announcement": announcementText,
-                            "timeStamp": FieldValue.serverTimestamp(),
-                          }).then((value) => _announcementController.clear());
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Duyuru başarıyla yayınlandı !"),duration: Duration(seconds: 2),));
-                    }
+                if (announcementText.isNotEmpty) {
+                  String email = (FirebaseAuth.instance.currentUser)?.email ?? '';
+
+                  FirebaseFirestore.instance.collection("community_requests").add(
+                    {
+                      "communityName": widget.communityName,
+                      "announcement": announcementText,
+                      "timeStamp": FieldValue.serverTimestamp(),
+                      "userId": email,
+                    },
+                  ).then((value) {
+                    Navigator.pop(context);
+                    _announcementController.clear();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Duyuru başarıyla yayınlandı !"), duration: Duration(seconds: 2),),
+                    );
                   });
                 }
               },
               child: const Text("Duyuruyu Yayınla"),
             ),
+
           ],
         ),
       ),

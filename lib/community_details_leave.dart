@@ -56,7 +56,7 @@ class _CommunityDetailsLeaveState extends State<CommunityDetailsLeave> {
         title: Row(
           children: [
             const SizedBox(width: 26),
-            Text("${widget.communityName} Detay"),
+            Expanded(child: Text("${widget.communityName} Detay")),
             const SizedBox(width: 2),
             const Icon(Icons.group),
           ],
