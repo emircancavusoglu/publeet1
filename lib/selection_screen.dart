@@ -70,7 +70,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.announcement_outlined),
-              title: const Text('Duyurularım'),
+              title: const Text('Duyuru Ekle'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const AnnounceAdmin(),));
               },
