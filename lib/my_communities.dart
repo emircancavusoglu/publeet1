@@ -89,7 +89,7 @@ class _MyCommunitiesState extends State<MyCommunities> {
                                   return Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      'Durum: ${requestStatus ?? "Hata"}',
+                                      'Durum: Onaylandı ',
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
