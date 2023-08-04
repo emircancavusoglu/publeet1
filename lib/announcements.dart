@@ -29,26 +29,31 @@ class _AnnouncState extends State<Announc> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
                 } else if (snapshot.hasData) {
-                  final List<QueryDocumentSnapshot> announcements = snapshot.data!.docs;
-                  return SingleChildScrollView(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: announcements.length,
-                      itemBuilder: (context, index) {
-                        final announcement = announcements[index];
-                        final String communityName = announcement['communityName'];
-                        final String announcementText = announcement['announcement'];
-                        final Timestamp timestamp = announcement['timeStamp'];
+                  final List<QueryDocumentSnapshot>? announcements = snapshot.data?.docs;
+                  if (announcements != null) {
+                    return SingleChildScrollView(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: announcements.length,
+                        itemBuilder: (context, index) {
+                          final announcement = announcements[index];
+                          final data = announcement.data() as Map<String, dynamic>; // Veri haritasını Map<String, dynamic> türüne dönüştürün
+                          final String communityName = data['communityName'] ?? '';
+                          final String announcementText = data['announcement'] ?? '';
+                          final Timestamp timestamp = data['timeStamp'] ?? Timestamp.now();
 
-                        return ListTile(
-                          title: Text(communityName),
-                          subtitle: Text(announcementText),
-                          trailing: Text(timestamp.toDate().toString()),
-                        );
-                      },
-                    ),
-                  );
+                          return ListTile(
+                            title: Text(communityName),
+                            subtitle: Text(announcementText),
+                            trailing: Text(timestamp.toDate().toString()),
+                          );
+                        },
+                      ),
+                    );
+                  } else {
+                    return const Text("Duyuru yok");
+                  }
                 } else {
                   return const Text("Duyuru yok");
                 }
