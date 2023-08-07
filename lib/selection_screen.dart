@@ -42,9 +42,11 @@ class _SelectionScreenState extends State<SelectionScreen> {
   Widget build(BuildContext context) {
     final User? currentUser = FirebaseAuth.instance.currentUser;
     Stream<List<String>> userCommunitiesStream = getData(currentUser?.uid ?? '');
+    final name = currentUser?.displayName;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Hoşgeldin"),
+        title: SingleChildScrollView(
+            child: Text("Hoşgeldin $name")),
       ),
       drawer: Drawer(
         child: ListView(
@@ -70,7 +72,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.announcement_outlined),
-              title: const Text('Duyurularım'),
+              title: const Text('Duyuru Ekle'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const AnnounceAdmin(),));
               },
