@@ -45,9 +45,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
     final name = currentUser?.displayName;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Hoşgeldin $name",style: TextStyle(
-          fontFamily: "Roboto Mono sample"
-        ),),
+        title: Text("Hoşgeldin $name"),
       ),
       drawer: Drawer(
         child: ListView(
