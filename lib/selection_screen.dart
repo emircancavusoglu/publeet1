@@ -42,9 +42,12 @@ class _SelectionScreenState extends State<SelectionScreen> {
   Widget build(BuildContext context) {
     final User? currentUser = FirebaseAuth.instance.currentUser;
     Stream<List<String>> userCommunitiesStream = getData(currentUser?.uid ?? '');
+    final name = currentUser?.displayName;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Hoşgeldin"),
+        title: Text("Hoşgeldin $name",style: TextStyle(
+          fontFamily: "Roboto Mono sample"
+        ),),
       ),
       drawer: Drawer(
         child: ListView(

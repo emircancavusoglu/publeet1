@@ -80,24 +80,9 @@ class _MyCommunitiesState extends State<MyCommunities> {
                             stream: FirebaseFirestore.instance
                                 .collection('community_requests')
                                 .where('communityName', isEqualTo: communityNames[index])
-                                .where('requestStatus', isEqualTo: true)
                                 .snapshots(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-                                var requestStatus = snapshot.data!.docs[0].get('requestStatus');
-                                if (requestStatus == true) {
-                                  return Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Durum: Onaylandı ',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: requestStatus == 'Beklemede' ? Colors.orange : Colors.black,
-                                      ),
-                                    ),
-                                  );
-                                }
                               } else if (snapshot.hasError) {
                                 return Text('Hata: ${snapshot.error}');
                               }

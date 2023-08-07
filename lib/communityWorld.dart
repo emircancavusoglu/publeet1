@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:publeet1/community_details.dart';
+import 'package:publeet1/community_list.dart'; // Bu sayfanın importını eklemeyi unutmayın
 
 class CommunityWorld extends StatefulWidget {
   const CommunityWorld({Key? key}) : super(key: key);
@@ -44,6 +46,7 @@ class _CommunityWorldState extends State<CommunityWorld> {
           infoWindow: InfoWindow(
             title: communityName,
             snippet: communityAddress,
+            onTap: () => _onInfoWindowTapped(markerId),
           ),
         );
         _markers[markerId] = marker;
@@ -91,22 +94,18 @@ class _CommunityWorldState extends State<CommunityWorld> {
   void _onMapCreated(GoogleMapController controller) {
     // Harita oluşturulduğunda işlem yapmak için boş bir fonksiyon
   }
-}
 
-class GetData {
-  Stream<List<String>> getData(String email) {
-    return FirebaseFirestore.instance
-        .collection('community_requests')
-        .where('userEmail', isEqualTo: email)
-        .where('requestStatus', isEqualTo: true)
-        .snapshots()
-        .map((snapshot) {
-      List<String> communityNames = [];
-      for (var doc in snapshot.docs) {
-        var communityName = doc['communityName'];
-        communityNames.add(communityName);
-      }
-      return communityNames;
-    });
+  void _onInfoWindowTapped(MarkerId markerId) {
+    final tappedMarker = _markers[markerId];
+    if (tappedMarker != null) {
+      _navigateToCommunityDetails(tappedMarker.infoWindow.title ?? '');
+    }
+  }
+
+  void _navigateToCommunityDetails(String communityName) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CommunityList()), // Hedef sayfanın adını burada belirtin
+    );
   }
 }
