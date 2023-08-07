@@ -45,7 +45,8 @@ class _SelectionScreenState extends State<SelectionScreen> {
     final name = currentUser?.displayName;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Hoşgeldin $name"),
+        title: SingleChildScrollView(
+            child: Text("Hoşgeldin $name")),
       ),
       drawer: Drawer(
         child: ListView(
