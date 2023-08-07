@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'community_details.dart';
 import 'login_screen.dart';
 
 class MyNotifications extends StatefulWidget {
@@ -45,26 +46,32 @@ class _MyNotificationsState extends State<MyNotifications> {
           ],
         ),
       ),
-      body: SingleChildScrollView( // Kaydırılabilme özelliği
-        child: StreamBuilder<List<String>>(
-          stream: data.getData(currentUser.email.toString()),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              List<String>? communityNames = snapshot.data;
-              if (communityNames != null && communityNames.isNotEmpty) {
-                return ListView.builder(
-                  shrinkWrap: true, // ListView'in boyutunu içeriğe göre ayarlar
-                  physics: const NeverScrollableScrollPhysics(), // ListView'in kaydırılmasını engeller
-                  itemCount: communityNames.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 13),
-                      child: ListTile(
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
+      body: StreamBuilder<List<String>>(
+        stream: data.getData(currentUser!.email.toString()),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<String>? communityNames = snapshot.data;
+            if (communityNames != null && communityNames.isNotEmpty) {
+              return ListView.builder(
+                itemCount: communityNames.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 13),
+                    child: ListTile(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CommunityDetails(communityName: communityNames[index]),
+                                  ),
+                                );
+                              },
                               child: Text(
                                 communityNames[index],
                                 style: const TextStyle(
@@ -73,19 +80,22 @@ class _MyNotificationsState extends State<MyNotifications> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 2),
-                            StreamBuilder<QuerySnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection('community_requests')
-                                  .where('communityName', isEqualTo: communityNames[index])
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  var requestStatus = snapshot.data!.docs[0].get('requestStatus');
+                          ),
+                          const SizedBox(height: 2),
+                          StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('community_requests')
+                                .where('communityName', isEqualTo: communityNames[index])
+                                .where('requestStatus', isEqualTo: true)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                                var requestStatus = snapshot.data!.docs[0].get('requestStatus');
+                                if (requestStatus == true) {
                                   return Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      'Durum: ${requestStatus ?? "Hata"}',
+                                      'Durum: Onaylandı ',
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -93,34 +103,33 @@ class _MyNotificationsState extends State<MyNotifications> {
                                       ),
                                     ),
                                   );
-                                } else if (snapshot.hasError) {
-                                  return Text('Hata: ${snapshot.error}');
-                                } else {
-                                  return const CircularProgressIndicator();
                                 }
-                              },
-                            ),
-                          ],
-                        ),
+                              } else if (snapshot.hasError) {
+                                return Text('Hata: ${snapshot.error}');
+                              }
+                              return const SizedBox();
+                            },
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                );
-              } else {
-                return const Center(
-                  child: Text(
-                    'Topluluk bulunamadı.',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                );
-              }
-            } else if (snapshot.hasError) {
-              return Text('Hata: ${snapshot.error}');
+                    ),
+                  );
+                },
+              );
             } else {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: Text(
+                  'Topluluk bulunamadı.',
+                  style: TextStyle(fontSize: 18),
+                ),
+              );
             }
-          },
-        ),
+          } else if (snapshot.hasError) {
+            return Text('Hata: ${snapshot.error}');
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }
