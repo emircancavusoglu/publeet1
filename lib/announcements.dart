@@ -41,12 +41,14 @@ class _AnnouncState extends State<Announc> {
                           final data = announcement.data() as Map<String, dynamic>; // Veri haritasını Map<String, dynamic> türüne dönüştürün
                           final String communityName = data['communityName'] ?? '';
                           final String announcementText = data['announcement'] ?? '';
-                          final Timestamp timestamp = data['timeStamp'] ?? Timestamp.now();
+                          final Timestamp timestamp = data['timeStamp'] ?? Timestamp.fromDate(DateTime(1));
+
+                          final formattedDate = "${timestamp.toDate().day}/${timestamp.toDate().month}/${timestamp.toDate().year} ${timestamp.toDate().hour}:${timestamp.toDate().minute}";
 
                           return ListTile(
                             title: Text(communityName),
                             subtitle: Text(announcementText),
-                            trailing: Text(timestamp.toDate().toString()),
+                            trailing: Text(formattedDate),
                           );
                         },
                       ),
