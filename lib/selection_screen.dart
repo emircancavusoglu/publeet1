@@ -55,11 +55,13 @@ class _SelectionScreenState extends State<SelectionScreen> {
               decoration: BoxDecoration(
                 color: Colors.deepPurple,
               ),
-              child: Text(
-                'Publeet',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
+              child: Center(
+                child: Text(
+                  'Publeet',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
                 ),
               ),
             ),
