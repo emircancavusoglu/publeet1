@@ -64,7 +64,7 @@ class _CreateAnnouncementsState extends State<CreateAnnouncements> {
                       "communityName": widget.communityName,
                       "announcement": announcementText,
                       "timeStamp": FieldValue.serverTimestamp(),
-                      "userId": email,
+                      "userEmail": email,
                     },
                   ).then((value) {
                     Navigator.pop(context);

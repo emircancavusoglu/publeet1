@@ -109,9 +109,6 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                             ScaffoldMessenger.of(context).showSnackBar(snackBar);
                             return;
                           }
-                          await FirebaseFirestore.instance.collection("community").doc(userEmail).set({
-                            "communityName": communityNameController.text,
-                          });
                           await FirebaseFirestore.instance.collection("community_requests").add({
                             "communityName": communityNameController.text,
                             "description": _descriptionController.text,

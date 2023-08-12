@@ -103,7 +103,21 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 StreamBuilder<List<String>>(
                   stream: userCommunitiesStream,
                   builder: (context, snapshot) {
-                    if (snapshot.hasData) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator(); // Veri yüklenirken bekleme göstergesi
+                    } else if (snapshot.hasError) {
+                      return Text('Hata: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Text(
+                        'Henüz topluluğa katılmadınız.',
+                        style: TextStyle(
+                          color: Colors.deepPurple,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      );
+                    } else {
                       final List<String> userCommunities = snapshot.data ?? [];
                       return SizedBox(
                         height: 90,
@@ -126,19 +140,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           },
                         ),
                       );
-                    } else {
-                      return const Text(
-                        'Topluluklar Yükleniyor...',
-                        style: TextStyle(
-                          color: Colors.deepPurple,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      );
                     }
                   },
                 ),
+
               ],
             ),
             const SizedBox(height: 45),
@@ -286,17 +291,37 @@ class BubbleWidget extends StatelessWidget {
     );
   }
 }
-Stream<List<String>> getData(String id) {
-  return FirebaseFirestore.instance
+
+Stream<List<String>> getData(String email) {
+  Stream<List<String>> userCommunitiesStream = FirebaseFirestore.instance
       .collection('users')
-      .doc(id)
+      .doc(email)
       .snapshots()
-      .map((snapshot) {
+      .asyncMap((snapshot) async {
     if (snapshot.exists) {
-      var communityNames = snapshot['joinedCommunities'];
-      return List<String>.from(communityNames ?? []);
+      var joinedCommunityNames = snapshot['joinedCommunities'];
+      List<String> userCommunities = List<String>.from(joinedCommunityNames ?? []);
+
+      // Şimdi requestStatus değeri true olan toplulukları da ekleyelim
+      QuerySnapshot requestSnapshot = await FirebaseFirestore.instance
+          .collection('community_requests')
+          .where('userEmail', isEqualTo: email)  // Kullanıcının emailine göre istekleri filtreliyoruz
+          .where('requestStatus', isEqualTo: true)
+          .get();
+
+      for (var doc in requestSnapshot.docs) {
+        var communityName = doc['communityName'];
+        if (!userCommunities.contains(communityName)) {  // Eğer kullanıcı zaten kayıtlı değilse ekliyoruz
+          userCommunities.add(communityName);
+        }
+      }
+
+      return userCommunities;
     } else {
       return [];
     }
   });
+
+  return userCommunitiesStream;
 }
+
