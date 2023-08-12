@@ -3,7 +3,6 @@ import 'package:publeet1/selection_screen.dart';
 
 class RequestCommunity extends StatelessWidget {
   const RequestCommunity({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +29,7 @@ class RequestCommunity extends StatelessWidget {
                   const ListTile(
                     title: Padding(
                       padding: EdgeInsets.only(left: 25),
-                      child: Text('Topluluk oluşturma isteğiniz gönderilmiştir. İsteklerim sayfasından kontrol edebilirsiniz.', style: TextStyle(color: Colors.white)),
+                      child: Text('Topluluk oluşturma isteğiniz gönderilmiştir. 24 saat içinde sorun olmaması halinde onaylanacaktır. İsteklerim sayfasından kontrol edebilirsiniz.', style: TextStyle(color: Colors.white)),
                     ),
                   ),
                   const SizedBox(height: 15,),

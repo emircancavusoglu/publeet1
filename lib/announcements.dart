@@ -42,7 +42,6 @@ class _AnnouncState extends State<Announc> {
                           final String communityName = data['communityName'] ?? '';
                           final String announcementText = data['announcement'] ?? '';
                           final Timestamp timestamp = data['timeStamp'] ?? Timestamp.fromDate(DateTime(1));
-
                           final formattedDate = "${timestamp.toDate().day}/${timestamp.toDate().month}/${timestamp.toDate().year} ${timestamp.toDate().hour}:${timestamp.toDate().minute}";
 
                           return ListTile(
