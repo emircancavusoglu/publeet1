@@ -53,7 +53,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
           children: [
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.deepPurple,
+                color: colorMain.mainColor,
               ),
               child: Center(
                 child: Text(
@@ -93,7 +93,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 const Text(
                   "Kayıtlı Olduğun Topluluklar:",
                   style: TextStyle(
-                    color: Colors.deepPurple,
+                    color: colorMain.mainColor,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,
@@ -103,21 +103,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 StreamBuilder<List<String>>(
                   stream: userCommunitiesStream,
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator(); // Veri yüklenirken bekleme göstergesi
-                    } else if (snapshot.hasError) {
-                      return Text('Hata: ${snapshot.error}');
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Text(
-                        'Henüz topluluğa katılmadınız.',
-                        style: TextStyle(
-                          color: Colors.deepPurple,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      );
-                    } else {
+                    if (snapshot.hasData) {
                       final List<String> userCommunities = snapshot.data ?? [];
                       return SizedBox(
                         height: 90,
@@ -130,7 +116,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                               child: Text(
                                 communityName,
                                 style: const TextStyle(
-                                  color: Colors.deepPurple,
+                                  color: colorMain.mainColor,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -140,10 +126,19 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           },
                         ),
                       );
+                    } else {
+                      return const Text(
+                        'Topluluklar Yükleniyor...',
+                        style: TextStyle(
+                          color: colorMain.mainColor,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      );
                     }
                   },
                 ),
-
               ],
             ),
             const SizedBox(height: 45),
@@ -272,7 +267,7 @@ class BubbleWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: Colors.deepPurple),
+              Icon(icon, color: colorMain.mainColor),
               const SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -280,7 +275,7 @@ class BubbleWidget extends StatelessWidget {
                   text,
                   style: const TextStyle(
                     fontSize: 24,
-                    color: Colors.deepPurple,
+                    color: colorMain.mainColor,
                   ),
                 ),
               ),
@@ -291,37 +286,22 @@ class BubbleWidget extends StatelessWidget {
     );
   }
 }
-
-Stream<List<String>> getData(String email) {
-  Stream<List<String>> userCommunitiesStream = FirebaseFirestore.instance
+Stream<List<String>> getData(String id) {
+  return FirebaseFirestore.instance
       .collection('users')
-      .doc(email)
+      .doc(id)
       .snapshots()
-      .asyncMap((snapshot) async {
+      .map((snapshot) {
     if (snapshot.exists) {
-      var joinedCommunityNames = snapshot['joinedCommunities'];
-      List<String> userCommunities = List<String>.from(joinedCommunityNames ?? []);
-
-      // Şimdi requestStatus değeri true olan toplulukları da ekleyelim
-      QuerySnapshot requestSnapshot = await FirebaseFirestore.instance
-          .collection('community_requests')
-          .where('userEmail', isEqualTo: email)  // Kullanıcının emailine göre istekleri filtreliyoruz
-          .where('requestStatus', isEqualTo: true)
-          .get();
-
-      for (var doc in requestSnapshot.docs) {
-        var communityName = doc['communityName'];
-        if (!userCommunities.contains(communityName)) {  // Eğer kullanıcı zaten kayıtlı değilse ekliyoruz
-          userCommunities.add(communityName);
-        }
-      }
-
-      return userCommunities;
+      var communityNames = snapshot['joinedCommunities'];
+      return List<String>.from(communityNames ?? []);
     } else {
       return [];
     }
   });
-
-  return userCommunitiesStream;
 }
+class colorMain {
+   static const  mainColor = Colors.deepPurple;
 
+
+}
