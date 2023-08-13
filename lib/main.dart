@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:publeet1/initialize/splash_screen.dart';
 import 'package:publeet1/login_screen.dart';
 import 'community_details.dart';
 import 'initialize/app_initialize.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.deepPurple,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: const LoginScreen(),
+        home: const SplashScreen(),
         routes: {
           '/communityDetails': (context) => const CommunityDetails(communityName: '',), // CommunityDetails route'ını tanımlayın
         },
