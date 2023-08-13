@@ -8,6 +8,7 @@ import 'communityWorld.dart';
 import 'community_details_leave.dart';
 import 'find_community.dart';
 import 'login_screen.dart';
+import 'package:publeet1/my_communities.dart' as myCommunities;
 import 'my_communities.dart';
 import 'my_notifications.dart';
 import 'utilities/google_sign_in.dart';
@@ -42,11 +43,13 @@ class _SelectionScreenState extends State<SelectionScreen> {
   Widget build(BuildContext context) {
     final User? currentUser = FirebaseAuth.instance.currentUser;
     Stream<List<String>> userCommunitiesStream = getData(currentUser?.uid ?? '');
+    Stream<List<String>> myCommunitiesStream = myCommunities.GetData().getData(currentUser?.email.toString() ?? '');
     final name = currentUser?.displayName;
     return Scaffold(
       appBar: AppBar(
         title: SingleChildScrollView(
-            child: Text("Hoşgeldin $name")),
+          child: Text("Hoşgeldin $name"),
+        ),
       ),
       drawer: Drawer(
         child: ListView(
@@ -87,7 +90,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 50),
+            const SizedBox(height: 10),
             Column(
               children: [
                 const Text(
@@ -105,12 +108,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final List<String> userCommunities = snapshot.data ?? [];
-                      return SizedBox(
-                        height: 90,
-                        child: ListView.builder(
-                          itemCount: userCommunities.length,
-                          itemBuilder: (context, index) {
-                            final communityName = userCommunities[index];
+                      return Column(
+                        children: [
+                          ...userCommunities.map((communityName) {
                             return GestureDetector(
                               onTap: () => navigateToCommunityDetailsLeave(communityName),
                               child: Text(
@@ -123,8 +123,63 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                 textAlign: TextAlign.center,
                               ),
                             );
-                          },
+                          }),
+                         StreamBuilder<List<String>>(
+                            stream: myCommunitiesStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                final List<String> myCommunities = snapshot.data ?? [];
+                                final nonDuplicateCommunities = myCommunities.where((community) => !userCommunities.contains(community)).toList();
+                                return Column(
+                                  children: nonDuplicateCommunities.map((communityName) {
+                                    return GestureDetector(
+                                      onTap: () => navigateToCommunityDetailsLeave(communityName),
+                                      child: Text(
+                                        communityName,
+                                        style: const TextStyle(
+                                          color: colorMain.mainColor,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  }).toList(),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text(
+                                  'Hata: ${snapshot.error}',
+                                  style: TextStyle(
+                                    color: colorMain.mainColor,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                );
+                              } else {
+                                return const Text(
+                                  'Topluluklar Yükleniyor...',
+                                  style: TextStyle(
+                                    color: colorMain.mainColor,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text(
+                        'Hata: ${snapshot.error}',
+                        style: TextStyle(
+                          color: colorMain.mainColor,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
                       );
                     } else {
                       return const Text(
@@ -203,7 +258,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const MyCommunities(),
+                          builder: (context) => const myCommunities.MyCommunities(),
                         ),
                       );
                     },
@@ -241,6 +296,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
     );
   }
 }
+
 class BubbleWidget extends StatelessWidget {
   final IconData icon;
   final String text;
@@ -286,6 +342,8 @@ class BubbleWidget extends StatelessWidget {
     );
   }
 }
+
+
 Stream<List<String>> getData(String id) {
   return FirebaseFirestore.instance
       .collection('users')
@@ -300,8 +358,7 @@ Stream<List<String>> getData(String id) {
     }
   });
 }
+
 class colorMain {
-   static const  mainColor = Colors.deepPurple;
-
-
+  static const mainColor = Colors.deepPurple;
 }
