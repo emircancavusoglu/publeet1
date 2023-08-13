@@ -5,6 +5,7 @@ import 'package:publeet1/request_community.dart';
 import 'package:publeet1/location/sign_location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:publeet1/selection_screen.dart';
 
 class AddCommunityForm extends StatefulWidget {
   const AddCommunityForm({Key? key}) : super(key: key);
@@ -51,7 +52,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                       child: Icon(
                         Icons.sentiment_satisfied_alt,
                         size: 96,
-                        color: Colors.deepPurple,
+                        color: colorMain.mainColor,
                       ),
                     ),
                     const SizedBox(
@@ -89,7 +90,8 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                     }, icon: const Icon(Icons.add_location_alt)),
                     const SizedBox(height: 32),
                     ElevatedButton(
-                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.deepPurple)),
+                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(
+                          colorMain.mainColor)),
                       onPressed: () async {
                         final currentUser = _auth.currentUser;
                         final userEmail = currentUser?.email ?? '';
@@ -133,7 +135,7 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
               ),
               if (_isLoading)
                 const CircularProgressIndicator(
-                  color: Colors.deepPurple,
+                  color: colorMain.mainColor,
                 ),
             ],
           ),

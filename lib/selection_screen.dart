@@ -8,6 +8,7 @@ import 'communityWorld.dart';
 import 'community_details_leave.dart';
 import 'find_community.dart';
 import 'login_screen.dart';
+import 'package:publeet1/my_communities.dart' as myCommunities;
 import 'my_communities.dart';
 import 'my_notifications.dart';
 import 'utilities/google_sign_in.dart';
@@ -42,18 +43,20 @@ class _SelectionScreenState extends State<SelectionScreen> {
   Widget build(BuildContext context) {
     final User? currentUser = FirebaseAuth.instance.currentUser;
     Stream<List<String>> userCommunitiesStream = getData(currentUser?.uid ?? '');
+    Stream<List<String>> myCommunitiesStream = myCommunities.GetData().getData(currentUser?.email.toString() ?? '');
     final name = currentUser?.displayName;
     return Scaffold(
       appBar: AppBar(
         title: SingleChildScrollView(
-            child: Text("Hoşgeldin $name")),
+          child: Text("Hoşgeldin $name"),
+        ),
       ),
       drawer: Drawer(
         child: ListView(
           children: [
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.deepPurple,
+                color: colorMain.mainColor,
               ),
               child: Center(
                 child: Text(
@@ -87,13 +90,13 @@ class _SelectionScreenState extends State<SelectionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 50),
+            const SizedBox(height: 10),
             Column(
               children: [
                 const Text(
                   "Kayıtlı Olduğun Topluluklar:",
                   style: TextStyle(
-                    color: Colors.deepPurple,
+                    color: colorMain.mainColor,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,
@@ -103,47 +106,94 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 StreamBuilder<List<String>>(
                   stream: userCommunitiesStream,
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator(); // Veri yüklenirken bekleme göstergesi
-                    } else if (snapshot.hasError) {
-                      return Text('Hata: ${snapshot.error}');
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Text(
-                        'Henüz topluluğa katılmadınız.',
-                        style: TextStyle(
-                          color: Colors.deepPurple,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      );
-                    } else {
+                    if (snapshot.hasData) {
                       final List<String> userCommunities = snapshot.data ?? [];
-                      return SizedBox(
-                        height: 90,
-                        child: ListView.builder(
-                          itemCount: userCommunities.length,
-                          itemBuilder: (context, index) {
-                            final communityName = userCommunities[index];
+                      return Column(
+                        children: [
+                          ...userCommunities.map((communityName) {
                             return GestureDetector(
                               onTap: () => navigateToCommunityDetailsLeave(communityName),
                               child: Text(
                                 communityName,
                                 style: const TextStyle(
-                                  color: Colors.deepPurple,
+                                  color: colorMain.mainColor,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
                             );
-                          },
+                          }),
+                         StreamBuilder<List<String>>(
+                            stream: myCommunitiesStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                final List<String> myCommunities = snapshot.data ?? [];
+                                final nonDuplicateCommunities = myCommunities.where((community) => !userCommunities.contains(community)).toList();
+                                return Column(
+                                  children: nonDuplicateCommunities.map((communityName) {
+                                    return GestureDetector(
+                                      onTap: () => navigateToCommunityDetailsLeave(communityName),
+                                      child: Text(
+                                        communityName,
+                                        style: const TextStyle(
+                                          color: colorMain.mainColor,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  }).toList(),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text(
+                                  'Hata: ${snapshot.error}',
+                                  style: TextStyle(
+                                    color: colorMain.mainColor,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                );
+                              } else {
+                                return const Text(
+                                  'Topluluklar Yükleniyor...',
+                                  style: TextStyle(
+                                    color: colorMain.mainColor,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text(
+                        'Hata: ${snapshot.error}',
+                        style: TextStyle(
+                          color: colorMain.mainColor,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
+                      );
+                    } else {
+                      return const Text(
+                        'Topluluklar Yükleniyor...',
+                        style: TextStyle(
+                          color: colorMain.mainColor,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
                       );
                     }
                   },
                 ),
-
               ],
             ),
             const SizedBox(height: 45),
@@ -208,7 +258,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const MyCommunities(),
+                          builder: (context) => const myCommunities.MyCommunities(),
                         ),
                       );
                     },
@@ -246,6 +296,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
     );
   }
 }
+
 class BubbleWidget extends StatelessWidget {
   final IconData icon;
   final String text;
@@ -272,7 +323,7 @@ class BubbleWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: Colors.deepPurple),
+              Icon(icon, color: colorMain.mainColor),
               const SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -280,7 +331,7 @@ class BubbleWidget extends StatelessWidget {
                   text,
                   style: const TextStyle(
                     fontSize: 24,
-                    color: Colors.deepPurple,
+                    color: colorMain.mainColor,
                   ),
                 ),
               ),
@@ -292,36 +343,22 @@ class BubbleWidget extends StatelessWidget {
   }
 }
 
-Stream<List<String>> getData(String email) {
-  Stream<List<String>> userCommunitiesStream = FirebaseFirestore.instance
+
+Stream<List<String>> getData(String id) {
+  return FirebaseFirestore.instance
       .collection('users')
-      .doc(email)
+      .doc(id)
       .snapshots()
-      .asyncMap((snapshot) async {
+      .map((snapshot) {
     if (snapshot.exists) {
-      var joinedCommunityNames = snapshot['joinedCommunities'];
-      List<String> userCommunities = List<String>.from(joinedCommunityNames ?? []);
-
-      // Şimdi requestStatus değeri true olan toplulukları da ekleyelim
-      QuerySnapshot requestSnapshot = await FirebaseFirestore.instance
-          .collection('community_requests')
-          .where('userEmail', isEqualTo: email)  // Kullanıcının emailine göre istekleri filtreliyoruz
-          .where('requestStatus', isEqualTo: true)
-          .get();
-
-      for (var doc in requestSnapshot.docs) {
-        var communityName = doc['communityName'];
-        if (!userCommunities.contains(communityName)) {  // Eğer kullanıcı zaten kayıtlı değilse ekliyoruz
-          userCommunities.add(communityName);
-        }
-      }
-
-      return userCommunities;
+      var communityNames = snapshot['joinedCommunities'];
+      return List<String>.from(communityNames ?? []);
     } else {
       return [];
     }
   });
-
-  return userCommunitiesStream;
 }
 
+class colorMain {
+  static const mainColor = Colors.deepPurple;
+}
