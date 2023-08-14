@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:publeet1/style.dart';
 import 'add_community.dart';
 import 'announcements.dart';
 import 'announcements_admin.dart';
@@ -56,7 +57,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
           children: [
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: colorMain.mainColor,
+                color: MainColor.mainColor,
               ),
               child: Center(
                 child: Text(
@@ -96,9 +97,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 const Text(
                   "Kayıtlı Olduğun Topluluklar:",
                   style: TextStyle(
-                    color: colorMain.mainColor,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                    color: MainColor.mainColor,
+                    fontSize: Size.fontSize,
+                    fontWeight: fontW.fontw,
                     decoration: TextDecoration.underline,
                   ),
                   textAlign: TextAlign.center,
@@ -116,7 +117,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                               child: Text(
                                 communityName,
                                 style: const TextStyle(
-                                  color: colorMain.mainColor,
+                                  color: MainColor.mainColor,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -137,7 +138,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                       child: Text(
                                         communityName,
                                         style: const TextStyle(
-                                          color: colorMain.mainColor,
+                                          color: MainColor.mainColor,
                                           fontSize: 24,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -149,8 +150,8 @@ class _SelectionScreenState extends State<SelectionScreen> {
                               } else if (snapshot.hasError) {
                                 return Text(
                                   'Hata: ${snapshot.error}',
-                                  style: TextStyle(
-                                    color: colorMain.mainColor,
+                                  style: const TextStyle(
+                                    color: MainColor.mainColor,
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -160,7 +161,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                 return const Text(
                                   'Topluluklar Yükleniyor...',
                                   style: TextStyle(
-                                    color: colorMain.mainColor,
+                                    color: MainColor.mainColor,
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -174,9 +175,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                     } else if (snapshot.hasError) {
                       return Text(
                         'Hata: ${snapshot.error}',
-                        style: TextStyle(
-                          color: colorMain.mainColor,
-                          fontSize: 24,
+                        style: const TextStyle(
+                          color: MainColor.mainColor,
+                          fontSize: Size.fontSize,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
@@ -185,7 +186,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       return const Text(
                         'Topluluklar Yükleniyor...',
                         style: TextStyle(
-                          color: colorMain.mainColor,
+                          color: MainColor.mainColor,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
@@ -323,7 +324,7 @@ class BubbleWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: colorMain.mainColor),
+              Icon(icon, color: MainColor.mainColor),
               const SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -331,7 +332,7 @@ class BubbleWidget extends StatelessWidget {
                   text,
                   style: const TextStyle(
                     fontSize: 24,
-                    color: colorMain.mainColor,
+                    color: MainColor.mainColor,
                   ),
                 ),
               ),
@@ -359,6 +360,3 @@ Stream<List<String>> getData(String id) {
   });
 }
 
-class colorMain {
-  static const mainColor = Colors.deepPurple;
-}
