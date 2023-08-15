@@ -35,7 +35,7 @@ class RequestCommunity extends StatelessWidget {
                   const SizedBox(height: 15,),
                   ElevatedButton(
                     onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const SelectionScreen(),));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SelectionScreen(),));
                     },
                     child: const Text("Anasayfaya Dön"),
                   ),

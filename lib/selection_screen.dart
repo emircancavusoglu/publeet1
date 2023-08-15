@@ -15,7 +15,7 @@ import 'my_notifications.dart';
 import 'utilities/google_sign_in.dart';
 
 class SelectionScreen extends StatefulWidget {
-  const SelectionScreen({Key? key}) : super(key: key);
+  SelectionScreen({Key? key}) : super(key: key);
 
   @override
   State<SelectionScreen> createState() => _SelectionScreenState();
@@ -23,6 +23,20 @@ class SelectionScreen extends StatefulWidget {
 
 class _SelectionScreenState extends State<SelectionScreen> {
   final TextEditingController toplulukAdController = TextEditingController();
+
+  late User? currentUser;
+  late Stream<List<String>> userCommunitiesStream;
+  late Stream<List<String>> myCommunitiesStream;
+  late String name;
+
+  @override
+  void initState() {
+    super.initState();
+    currentUser = FirebaseAuth.instance.currentUser;
+    userCommunitiesStream = getData(currentUser?.uid ?? '');
+    myCommunitiesStream = myCommunities.GetData().getData(currentUser?.email.toString() ?? '');
+    name = currentUser?.displayName ?? '';
+  }
 
   void toLoginScreen() {
     Navigator.push(
@@ -42,10 +56,6 @@ class _SelectionScreenState extends State<SelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final User? currentUser = FirebaseAuth.instance.currentUser;
-    Stream<List<String>> userCommunitiesStream = getData(currentUser?.uid ?? '');
-    Stream<List<String>> myCommunitiesStream = myCommunities.GetData().getData(currentUser?.email.toString() ?? '');
-    final name = currentUser?.displayName;
     return Scaffold(
       appBar: AppBar(
         title: SingleChildScrollView(
@@ -64,7 +74,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                   'Publeet',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: Size.fontSize,
                   ),
                 ),
               ),
@@ -99,7 +109,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                   style: TextStyle(
                     color: MainColor.mainColor,
                     fontSize: Size.fontSize,
-                    fontWeight: fontW.fontw,
+                    fontWeight: FontW.fontw,
                     decoration: TextDecoration.underline,
                   ),
                   textAlign: TextAlign.center,
@@ -114,18 +124,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           ...userCommunities.map((communityName) {
                             return GestureDetector(
                               onTap: () => navigateToCommunityDetailsLeave(communityName),
-                              child: Text(
-                                communityName,
-                                style: const TextStyle(
-                                  color: MainColor.mainColor,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+                              child: TextWidget(textName: communityName),
                             );
                           }),
-                         StreamBuilder<List<String>>(
+                          StreamBuilder<List<String>>(
                             stream: myCommunitiesStream,
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
@@ -135,15 +137,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                   children: nonDuplicateCommunities.map((communityName) {
                                     return GestureDetector(
                                       onTap: () => navigateToCommunityDetailsLeave(communityName),
-                                      child: Text(
-                                        communityName,
-                                        style: const TextStyle(
-                                          color: MainColor.mainColor,
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
+                                      child: TextWidget(textName: communityName),
                                     );
                                   }).toList(),
                                 );
@@ -152,21 +146,14 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                   'Hata: ${snapshot.error}',
                                   style: const TextStyle(
                                     color: MainColor.mainColor,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: Size.fontSize,
+                                    fontWeight: FontW.fontw,
                                   ),
                                   textAlign: TextAlign.center,
                                 );
                               } else {
-                                return const Text(
-                                  'Topluluklar Yükleniyor...',
-                                  style: TextStyle(
-                                    color: MainColor.mainColor,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                );
+                                return const TextWidget(
+                                    textName: 'Topluluklar Yükleniyor... ');
                               }
                             },
                           ),
@@ -178,20 +165,12 @@ class _SelectionScreenState extends State<SelectionScreen> {
                         style: const TextStyle(
                           color: MainColor.mainColor,
                           fontSize: Size.fontSize,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontW.fontw,
                         ),
                         textAlign: TextAlign.center,
                       );
                     } else {
-                      return const Text(
-                        'Topluluklar Yükleniyor...',
-                        style: TextStyle(
-                          color: MainColor.mainColor,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      );
+                      return const TextWidget(textName: 'Topluluklar Yükleniyor... ',);
                     }
                   },
                 ),
@@ -298,6 +277,26 @@ class _SelectionScreenState extends State<SelectionScreen> {
   }
 }
 
+class TextWidget extends StatelessWidget {
+  final String textName;
+  const TextWidget({
+    super.key, required this.textName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "$textName",
+      style: const TextStyle(
+        color: MainColor.mainColor,
+        fontSize: Size.fontSize,
+        fontWeight: FontW.fontw,
+      ),
+      textAlign: TextAlign.center,
+    );
+  }
+}
+
 class BubbleWidget extends StatelessWidget {
   final IconData icon;
   final String text;
@@ -331,7 +330,7 @@ class BubbleWidget extends StatelessWidget {
                 child: Text(
                   text,
                   style: const TextStyle(
-                    fontSize: 24,
+                    fontSize: Size.fontSize,
                     color: MainColor.mainColor,
                   ),
                 ),
@@ -343,7 +342,6 @@ class BubbleWidget extends StatelessWidget {
     );
   }
 }
-
 
 Stream<List<String>> getData(String id) {
   return FirebaseFirestore.instance
@@ -359,4 +357,3 @@ Stream<List<String>> getData(String id) {
     }
   });
 }
-
