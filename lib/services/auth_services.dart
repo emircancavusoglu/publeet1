@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:publeet1/selection_screen.dart';
-import 'package:publeet1/login_screen.dart';
-import 'package:publeet1/my_communities.dart';
 
 class AuthServices{
   final usersCollection = FirebaseFirestore.instance.collection("users");
@@ -26,7 +24,7 @@ class AuthServices{
     try{
       final UserCredential userCredential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       if(userCredential.user != null){
-        navigator.push(MaterialPageRoute(builder: (context) => const SelectionScreen(),));
+        navigator.push(MaterialPageRoute(builder: (context) => SelectionScreen(),));
       }
     } on FirebaseAuthException catch(e){
       showDialog(
