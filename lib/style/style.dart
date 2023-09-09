@@ -5,8 +5,11 @@ class MainColor {
 }
 
 class Size{
-  static const double fontSize = 40;
+  static const double fontSize = 21;
 }
 class FontW {
   static const fontw = FontWeight.bold;
+}
+class SizedHeight{
+  static const double sizeHeight = 40;
 }
