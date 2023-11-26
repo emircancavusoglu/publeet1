@@ -105,7 +105,7 @@ class _CommunityWorldState extends State<CommunityWorld> {
   void _navigateToCommunityDetails(String communityName) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CommunityList()), // Hedef sayfanın adını burada belirtin
+      MaterialPageRoute(builder: (context) => const CommunityList()),
     );
   }
 }

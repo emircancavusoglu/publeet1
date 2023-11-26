@@ -70,7 +70,7 @@ class _AnnouncState extends State<Announc> {
 
   Stream<QuerySnapshot> _getAnnouncements(List<String> userCommunities) {
     return FirebaseFirestore.instance
-        .collection("community_requests")
+        .collection("communities")
         .where("communityName", whereIn: userCommunities)
         .snapshots();
   }

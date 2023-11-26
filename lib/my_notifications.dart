@@ -64,14 +64,7 @@ class _MyNotificationsState extends State<MyNotifications> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CommunityDetails(communityName: communityNames[index]),
-                                  ),
-                                );
-                              },
+                              onPressed: () {},
                               child: Text(
                                 communityNames[index],
                                 style: const TextStyle(

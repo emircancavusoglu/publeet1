@@ -6,7 +6,7 @@ import 'package:publeet1/location/sign_location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:publeet1/selection_screen.dart';
-import 'package:publeet1/style.dart';
+import 'package:publeet1/style/style.dart';
 
 class AddCommunityForm extends StatefulWidget {
   const AddCommunityForm({Key? key}) : super(key: key);
@@ -86,33 +86,66 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                         return null;
                       },
                     ),
-                    IconButton(onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const KonumKayit(),));
-                    }, icon: const Icon(Icons.add_location_alt)),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const KonumKayit(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.add_location_alt),
+                    ),
                     const SizedBox(height: 32),
                     ElevatedButton(
-                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(
-                          MainColor.mainColor)),
+                      style: ButtonStyle(
+                        backgroundColor:
+                        MaterialStateProperty.all(MainColor.mainColor),
+                      ),
                       onPressed: () async {
                         final currentUser = _auth.currentUser;
                         final userEmail = currentUser?.email ?? '';
-                        final userPosition = Provider.of<LocationProvider>(context, listen: false).userPosition;
-                        if (_formKey.currentState!.validate() && userPosition != null) {
-                          final List<Placemark> placemarks = await placemarkFromCoordinates(
+                        final userPosition =
+                            Provider.of<LocationProvider>(context, listen: false)
+                                .userPosition;
+                        if (_formKey.currentState!.validate() &&
+                            userPosition != null) {
+                          final List<Placemark> placemarks =
+                          await placemarkFromCoordinates(
                             userPosition.latitude,
                             userPosition.longitude,
                           );
                           if (placemarks.isNotEmpty) {
                             Placemark place = placemarks[0];
-                            _currentAddress = '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
+                            _currentAddress =
+                            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
                           }
-                          bool isCommunityNameExists = await _isCommunityNameExists(communityNameController.text);
-                          if (isCommunityNameExists) {
-                            final snackBar = const SnackBar(content: Text("Bu isimde bir topluluk zaten mevcut!"));
+
+                          // Check if the user can create a community
+                          bool canCreateCommunity =
+                          await _canCreateCommunity(userEmail);
+                          if (!canCreateCommunity) {
+                            final snackBar = const SnackBar(
+                                content: Text(
+                                    "24 saat içerisinde en fazla 2 topluluk oluşturabilirsiniz."));
                             ScaffoldMessenger.of(context).showSnackBar(snackBar);
                             return;
                           }
-                          await FirebaseFirestore.instance.collection("community_requests").add({
+
+                          bool isCommunityNameExists =
+                          await _isCommunityNameExists(
+                              communityNameController.text);
+                          if (isCommunityNameExists) {
+                            final snackBar = const SnackBar(
+                                content: Text(
+                                    "Bu isimde bir topluluk zaten mevcut!"));
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            return;
+                          }
+                          await FirebaseFirestore.instance
+                              .collection("community_requests")
+                              .add({
                             "communityName": communityNameController.text,
                             "description": _descriptionController.text,
                             "userEmail": userEmail,
@@ -121,11 +154,17 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
                             "communityAddress": _currentAddress,
                             "requestStatus": false,
                           });
-                          const snackBar = SnackBar(content: Text("Bilgiler kaydedildi"));
+                          const snackBar =
+                          SnackBar(content: Text("Bilgiler kaydedildi"));
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RequestCommunity()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const RequestCommunity()));
                         } else {
-                          final snackBar = SnackBar(content: const Text("Konum bilgisi alınamadı veya formda eksik bilgi var!"));
+                          final snackBar = SnackBar(
+                              content: const Text(
+                                  "Konum bilgisi alınamadı veya formda eksik bilgi var!"));
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
                       },
@@ -154,6 +193,25 @@ class _AddCommunityFormState extends State<AddCommunityForm> {
           .limit(1)
           .get();
       return snapshot.docs.isNotEmpty;
+    } catch (e) {
+      print('Hata: $e');
+      return false;
+    }
+  }
+
+  Future<bool> _canCreateCommunity(String userEmail) async {
+    try {
+      final DateTime now = DateTime.now();
+      final DateTime twentyFourHoursAgo = now.subtract(const Duration(hours: 24));
+
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final QuerySnapshot snapshot = await firestore
+          .collection('communities')
+          .where('userEmail', isEqualTo: userEmail)
+          .where('timeStamp', isGreaterThan: Timestamp.fromDate(twentyFourHoursAgo))
+          .get();
+
+      return snapshot.docs.length < 2; // Limit to 2 communities within 24 hours
     } catch (e) {
       print('Hata: $e');
       return false;
