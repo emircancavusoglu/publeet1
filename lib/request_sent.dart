@@ -37,7 +37,7 @@ class RequestSent extends StatelessWidget {
                   const SizedBox(height: 15,),
                   ElevatedButton(
                     onPressed: (){
-                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SelectionScreen(),));
                     },
                     child: const Text("Anasayfaya Dön"),
                   ),

@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         ),
         home: const SplashScreen(),
         routes: {
-          '/communityDetails': (context) => const CommunityDetails(communityName: '',), // CommunityDetails route'ını tanımlayın
+          '/communityDetails': (context) => CommunityDetails(communityName: '',), // CommunityDetails route'ını tanımlayın
         },
       ),
     );

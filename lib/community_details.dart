@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:publeet1/style/style.dart';
 import 'location/sign_location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CommunityDetails extends StatefulWidget {
   final String communityName;
 
-  const CommunityDetails({Key? key, required this.communityName}) : super(key: key);
+  CommunityDetails({Key? key, required this.communityName}) : super(key: key);
 
   @override
   _CommunityDetailsState createState() => _CommunityDetailsState();
@@ -80,7 +81,7 @@ class _CommunityDetailsState extends State<CommunityDetails> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Durum: ${requestStatus ?? "Hata"}',
+                      'Durum: ${requestStatus ? "Onaylandı" : "Hata"}',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -106,7 +107,7 @@ class _CommunityDetailsState extends State<CommunityDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              description ?? 'Hata',
+                              description,
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
@@ -153,7 +154,16 @@ class _CommunityDetailsState extends State<CommunityDetails> {
                                   },
                                 ),
                               ),
+                            const SizedBox(height: SizedHeight.sizeHeight,), //change this part
+                            Center(child: ElevatedButton(onPressed: ()async{
+                              for (var doc in snapshot.data!.docs) {
+                                await doc.reference.delete();
+                              }
+                              Navigator.pop(context);
+                            }, child: const Text("Topluluğu Sil")),
+                            ),
                           ],
+
                         );
                       }).toList(),
                     ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:publeet1/style.dart';
+import 'package:publeet1/style/style.dart';
 import 'add_community.dart';
 import 'announcements.dart';
 import 'announcements_admin.dart';
@@ -10,12 +10,12 @@ import 'community_details_leave.dart';
 import 'find_community.dart';
 import 'login_screen.dart';
 import 'package:publeet1/my_communities.dart' as myCommunities;
-import 'my_communities.dart';
 import 'my_notifications.dart';
 import 'utilities/google_sign_in.dart';
+import 'logic/get_data.dart';
 
 class SelectionScreen extends StatefulWidget {
-  SelectionScreen({Key? key}) : super(key: key);
+  const SelectionScreen({Key? key}) : super(key: key);
 
   @override
   State<SelectionScreen> createState() => _SelectionScreenState();
@@ -87,7 +87,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.announcement_outlined),
+              leading: const Icon(Icons.add_circle),
               title: const Text('Duyuru Ekle'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const AnnounceAdmin(),));
@@ -105,7 +105,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
             Column(
               children: [
                 const Text(
-                  "Kayıtlı Olduğun Topluluklar:",
+                  "Kayıtlı Olduğun Topluluklar",
                   style: TextStyle(
                     color: MainColor.mainColor,
                     fontSize: Size.fontSize,
@@ -286,7 +286,7 @@ class TextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "$textName",
+      textName,
       style: const TextStyle(
         color: MainColor.mainColor,
         fontSize: Size.fontSize,
@@ -341,19 +341,4 @@ class BubbleWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-Stream<List<String>> getData(String id) {
-  return FirebaseFirestore.instance
-      .collection('users')
-      .doc(id)
-      .snapshots()
-      .map((snapshot) {
-    if (snapshot.exists) {
-      var communityNames = snapshot['joinedCommunities'];
-      return List<String>.from(communityNames ?? []);
-    } else {
-      return [];
-    }
-  });
 }
