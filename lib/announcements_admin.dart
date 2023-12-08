@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:publeet1/community_details.dart';
 import 'package:publeet1/create_announcements.dart';
 
 class AnnounceAdmin extends StatefulWidget {
@@ -64,7 +63,8 @@ class _AnnounceAdminState extends State<AnnounceAdmin> {
                                   alignment: Alignment.centerLeft,
                                   child: TextButton(
                                     onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAnnouncements(communityName: communityNames[index],),));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                          CreateAnnouncements(communityName: communityNames[index],),));
                                     },
                                     child: Text(
                                       communityNames[index],
