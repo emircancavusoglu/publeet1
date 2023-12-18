@@ -28,8 +28,8 @@ class _AnnouncState extends State<Announc> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
-                } else if (snapshot.hasData) {
-                  final List<QueryDocumentSnapshot>? announcements = snapshot.data?.docs;
+                } else if (snapshot.hasData && snapshot.data != null) {
+                  final List<QueryDocumentSnapshot>? announcements = snapshot.data!.docs;
                   if (announcements != null) {
                     return SingleChildScrollView(
                       child: ListView.builder(
