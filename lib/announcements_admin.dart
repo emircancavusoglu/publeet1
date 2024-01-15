@@ -114,9 +114,9 @@ class _AnnounceAdminState extends State<AnnounceAdmin> {
 }
 
 class GetData {
-  Stream<List<String>> getData(String email) {
-    return FirebaseFirestore.instance
-        .collection('community_requests')
+      Stream<List<String>> getData(String email) {
+        return FirebaseFirestore.instance
+            .collection('community_requests')
         .where('userEmail', isEqualTo: email)
         .where('requestStatus', isEqualTo: true)
         .snapshots()

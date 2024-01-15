@@ -98,179 +98,181 @@ class _SelectionScreenState extends State<SelectionScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(5.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 10),
-            Column(
-              children: [
-                const Text(
-                  "Kayıtlı Olduğun Topluluklar",
-                  style: TextStyle(
-                    color: MainColor.mainColor,
-                    fontSize: Size.fontSize,
-                    fontWeight: FontW.fontw,
-                    decoration: TextDecoration.underline,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 10),
+              Column(
+                children: [
+                  const Text(
+                    "Kayıtlı Olduğun Topluluklar",
+                    style: TextStyle(
+                      color: MainColor.mainColor,
+                      fontSize: Size.fontSize,
+                      fontWeight: FontW.fontw,
+                      decoration: TextDecoration.underline,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                StreamBuilder<List<String>>(
-                  stream: userCommunitiesStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final List<String> userCommunities = snapshot.data ?? [];
-                      return Column(
-                        children: [
-                          ...userCommunities.map((communityName) {
-                            return GestureDetector(
-                              onTap: () => navigateToCommunityDetailsLeave(communityName),
-                              child: TextWidget(textName: communityName),
-                            );
-                          }),
-                          StreamBuilder<List<String>>(
-                            stream: myCommunitiesStream,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                final List<String> myCommunities = snapshot.data ?? [];
-                                final nonDuplicateCommunities = myCommunities.where((community) => !userCommunities.contains(community)).toList();
-                                return Column(
-                                  children: nonDuplicateCommunities.map((communityName) {
-                                    return GestureDetector(
-                                      onTap: () => navigateToCommunityDetailsLeave(communityName),
-                                      child: TextWidget(textName: communityName),
-                                    );
-                                  }).toList(),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text(
-                                  'Hata: ${snapshot.error}',
-                                  style: const TextStyle(
-                                    color: MainColor.mainColor,
-                                    fontSize: Size.fontSize,
-                                    fontWeight: FontW.fontw,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                );
-                              } else {
-                                return const TextWidget(
-                                    textName: 'Topluluklar Yükleniyor... ');
-                              }
-                            },
+                  StreamBuilder<List<String>>(
+                    stream: userCommunitiesStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final List<String> userCommunities = snapshot.data ?? [];
+                        return Column(
+                          children: [
+                            ...userCommunities.map((communityName) {
+                              return GestureDetector(
+                                onTap: () => navigateToCommunityDetailsLeave(communityName),
+                                child: TextWidget(textName: communityName),
+                              );
+                            }),
+                            StreamBuilder<List<String>>(
+                              stream: myCommunitiesStream,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  final List<String> myCommunities = snapshot.data ?? [];
+                                  final nonDuplicateCommunities = myCommunities.where((community) => !userCommunities.contains(community)).toList();
+                                  return Column(
+                                    children: nonDuplicateCommunities.map((communityName) {
+                                      return GestureDetector(
+                                        onTap: () => navigateToCommunityDetailsLeave(communityName),
+                                        child: TextWidget(textName: communityName),
+                                      );
+                                    }).toList(),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return Text(
+                                    'Hata: ${snapshot.error}',
+                                    style: const TextStyle(
+                                      color: MainColor.mainColor,
+                                      fontSize: Size.fontSize,
+                                      fontWeight: FontW.fontw,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  );
+                                } else {
+                                  return const TextWidget(
+                                      textName: 'Topluluklar Yükleniyor... ');
+                                }
+                              },
+                            ),
+                          ],
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text(
+                          'Hata: ${snapshot.error}',
+                          style: const TextStyle(
+                            color: MainColor.mainColor,
+                            fontSize: Size.fontSize,
+                            fontWeight: FontW.fontw,
                           ),
-                        ],
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text(
-                        'Hata: ${snapshot.error}',
-                        style: const TextStyle(
-                          color: MainColor.mainColor,
-                          fontSize: Size.fontSize,
-                          fontWeight: FontW.fontw,
-                        ),
-                        textAlign: TextAlign.center,
-                      );
-                    } else {
-                      return const TextWidget(textName: 'Topluluklar Yükleniyor... ',);
-                    }
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 45),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: BubbleWidget(
-                    icon: Icons.group_add_outlined,
-                    text: "Topluluk Ekle",
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AddCommunityForm(),
-                        ),
-                      );
+                          textAlign: TextAlign.center,
+                        );
+                      } else {
+                        return const TextWidget(textName: 'Topluluklar Yükleniyor... ',);
+                      }
                     },
                   ),
-                ),
-                const SizedBox(width: 5),
-                Expanded(
-                  child: BubbleWidget(
-                    icon: Icons.search,
-                    text: "Topluluk Bul",
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const FindCommunity(),
-                        ),
-                      );
-                    },
+                ],
+              ),
+              const SizedBox(height: 45),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: BubbleWidget(
+                      icon: Icons.group_add_outlined,
+                      text: "Topluluk Ekle",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AddCommunityForm(),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: BubbleWidget(
-                    icon: Icons.public,
-                    text: "Keşfet",
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CommunityWorld(),
-                        ),
-                      );
-                    },
+                  const SizedBox(width: 5),
+                  Expanded(
+                    child: BubbleWidget(
+                      icon: Icons.search,
+                      text: "Topluluk Bul",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const FindCommunity(),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(width: 5),
-                Expanded(
-                  child: BubbleWidget(
-                    icon: Icons.group,
-                    text: "Topluluklarım",
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const myCommunities.MyCommunities(),
-                        ),
-                      );
-                    },
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: BubbleWidget(
+                      icon: Icons.public,
+                      text: "Keşfet",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CommunityWorld(),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(width: 5),
-              ],
-            ),
-            const SizedBox(height: 5),
-            BubbleWidget(
-              icon: Icons.notifications,
-              text: "İsteklerim",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MyNotifications(),
+                  const SizedBox(width: 5),
+                  Expanded(
+                    child: BubbleWidget(
+                      icon: Icons.group,
+                      text: "Topluluklarım",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const myCommunities.MyCommunities(),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                );
-              },
-              width: 160,
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton.icon(
-              onPressed: () async {
-                await signOutWithGoogle();
-                toLoginScreen();
-              },
-              icon: const Icon(Icons.logout_outlined),
-              label: const Text("Çıkış Yap"),
-            ),
-          ],
+                  const SizedBox(width: 5),
+                ],
+              ),
+              const SizedBox(height: 5),
+              BubbleWidget(
+                icon: Icons.notifications,
+                text: "İsteklerim",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MyNotifications(),
+                    ),
+                  );
+                },
+                width: 160,
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton.icon(
+                onPressed: () async {
+                  await signOutWithGoogle();
+                  toLoginScreen();
+                },
+                icon: const Icon(Icons.logout_outlined),
+                label: const Text("Çıkış Yap"),
+              ),
+            ],
+          ),
         ),
       ),
     );
